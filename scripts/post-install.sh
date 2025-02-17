@@ -30,33 +30,43 @@ log() {
     fi
 }
 
-echo "[Network]"
-    ident="  "
-    st="p"
-    log "Reconnect previous connection"
-    cd /
-    SSID=$(ls | grep ".psk" | sed "s/.psk//")
-    psk_file="/$SSID.psk"
-    password=$(sudo grep 'Passphrase=' "$psk_file" | cut -d= -f2)
-    until nmcli -t -f STATE general | grep -q "connected"; do
-        sleep 2
-    done
-    nmcli device wifi connect "$SSID" password "$password"
-    st="da"
-    log "$SSID"
-
-    st="p"
-    log "Remove old connetion file"
-    rm $psk_file
-    log
-
-echo "[Network] DONE"
+# echo "[Network]"
+#     ident="  "
+#     st="p"
+#     log "Reconnect previous connection"
+#     cd /
+#     SSID=$(ls | grep ".psk" | sed "s/.psk//")
+#     psk_file="/$SSID.psk"
+#     password=$(sudo grep 'Passphrase=' "$psk_file" | cut -d= -f2)
+#     until nmcli -t -f STATE general | grep -q "connected"; do
+#         sleep 2
+#     done
+#     nmcli device wifi connect "$SSID" password "$password"
+#     st="da"
+#     log "$SSID"
+#
+#     st="p"
+#     log "Remove old connetion file"
+#     rm $psk_file
+#     log
+#
+# echo "[Network] DONE"
 
 echo "[Apps]"
     ident="  "
     st="p"
-    log "Setup current apps"
-    paru -S stow rebos-git
+    log "Rebos"
+    sudo pacman -S stow
+    cat /etc/pacman.conf tmp
+    cat <<EOF >>tmp
+[oglo-arch-repo]
+SigLevel = Optional DatabaseOptional
+Server = https://gitlab.com/Oglo12/$repo/-/raw/main/$arch
+EOF
+    sudo rm -f /etc/pacman.conf
+    sudo mv tmp /etc/pacman.conf
+    sudo pacman -Syy
+
     cd $HOME/.dotfiles
     stow -v files
     rebos setup
@@ -67,12 +77,12 @@ echo "[Apps]"
 
     st="p"
     log "Greetd"
-    rm -rf /etc/greetd || true
-    mkdir -p /etc/greetd || true
-    cp -r greetd /etc/greetd
-    systemctl enable greetd
-    usermod -a -G video greeter
-    chown greeter /etc/greetd
+    sudo rm -rf /etc/greetd || true
+    sudo mkdir -p /etc/greetd || true
+    sudo cp -r greetd /etc/greetd
+    sudo systemctl enable greetd
+    sudo usermod -a -G video greeter
+    sudo chown greeter /etc/greetd
     log
 
     st="p"
@@ -82,14 +92,14 @@ echo "[Apps]"
 
     st="p"
     log "Scheduler optimization"
-    systemctl disable --now ananicy-cpp || true
-    dbus-send --system --print-reply --dest=org.scx.Loader /org/scx/Loader org.scx.Loader.StartScheduler string:scx_lavd uint32:0
+    sudo systemctl disable --now ananicy-cpp || true
+    sudo dbus-send --system --print-reply --dest=org.scx.Loader /org/scx/Loader org.scx.Loader.StartScheduler string:scx_lavd uint32:0
     log
 
     st="p"
     log "Setup Zsh"
-    chsh -s /usr/bin/zsh
-    usermod -a -G wheel,audio,video -s /bin/zsh $USER
+    sudo chsh -s /usr/bin/zsh
+    sudo usermod -a -G wheel,audio,video -s /bin/zsh $USER
     log
 
     st="p"
