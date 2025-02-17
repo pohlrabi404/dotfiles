@@ -71,7 +71,7 @@ add_supported_repo() {
 
     st="p"
     log "Change config and backup"
-    cp $pacman_conf $pacman_conf_c
+    cp $pacman_conf $pacman_conf_c || true
     gawk -i inplace -f $gawk_script $pacman_conf_c
     mv $pacman_conf $pacman_conf_b
     mv $pacman_conf_c $pacman_conf
@@ -130,13 +130,15 @@ echo "[CachyOS]"
     log
 
     add_supported_repo
-    pacman -Syu --noconfirm
 
     st="p"
     log "Get vendor"
-    is_amd=$(lscpu | grep "Vendor ID" | grep "AMD")
-    is_intel=$(lscpu | grep "Vendor ID" | grep "Intel")
-     
+    # is_amd=$(lscpu | grep "Vendor ID" | grep "AMD")
+    # is_intel=$(lscpu | grep "Vendor ID" | grep "Intel")
+
+    is_amd=""
+    is_intel="weird"    
+
     if [[ -n $is_amd ]]; then
         vendor="amd-ucode"
     elif [[ -n $is_intel ]]; then
@@ -144,6 +146,8 @@ echo "[CachyOS]"
     else
         vendor=""
     fi
+
+    pacman -Syu --noconfirm
     pacman -S paru sudo networkmanager linux-cachyos $vendor --noconfirm
 
     st="da"
@@ -211,7 +215,8 @@ EOF
 
     st="p"
     log "Connect wifi"
-    SSID=$(cat /ssid)
+    cd /
+    SSID=$(ls | grep ".psk" | sed "s/.psk//")
     psk_file="/$SSID.psk"
     password=$(sudo grep 'Passphrase=' "$psk_file" | cut -d= -f2)
     until nmcli -t -f STATE general | grep -q "connected"; do
