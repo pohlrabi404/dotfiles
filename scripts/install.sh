@@ -151,7 +151,7 @@ echo "[Installation]"
 
     st="p"
     log "Move scripts"
-    cp -r ../scripts/ /mnt/
+    cp -r ../scripts /mnt
     log
 
     st="p"

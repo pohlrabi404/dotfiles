@@ -43,35 +43,34 @@ add_supported_repo() {
     local pacman_conf_c="./pacman.conf"
     local pacman_conf_b="/etc/pacman.conf.bak"
 
+    local isa_level="x86-64-v4"
+    local gawk_script="./install-znver4-repo.awk"
+    local repo_name="cachyos-znver4"
+
     if [[ -n $is_v4 ]] && [[ -n $znver_supported ]]; then
-        local isa_level="x86-64-v4"
-        local gawk_script="./install-znver4-repo.awk"
-        local repo_name="cachyos-znver4"
-        st="da"
-        log "$repo_name"
+        isa_level="x86-64-v4"
+        gawk_script="./install-znver4-repo.awk"
+        repo_name="cachyos-znver4"
     elif [[ -n $is_v4 ]]; then
-        local isa_level="x86-64-v4"
-        local gawk_script="./install-v4-repo.awk"
-        local repo_name="cachyos-v4"
-        st="da"
-        log "$repo_name"
+        isa_level="x86-64-v4"
+        gawk_script="./install-v4-repo.awk"
+        repo_name="cachyos-v4"
     elif [[ -n $is_v3 ]]; then
-        local isa_level="x86-64-v3"
-        local gawk_script="./install-v3-repo.awk"
-        local repo_name="cachyos-v3"
-        st="da"
-        log "$repo_name"
+        isa_level="x86-64-v3"
+        gawk_script="./install-v3-repo.awk"
+        repo_name="cachyos-v3"
     else
-        local isa_level="x86-64"
-        local gawk_script="./install-repo.awk"
-        st="da"
-        log "$isa_level"
+        isa_level="x86-64"
+        gawk_script="./install-repo.awk"
+        repo_name="x86-64"
     fi
+    st="da"
+    log "$repo_name"
 
     st="p"
     log "Change config and backup"
     cp $pacman_conf $pacman_conf_c
-    gawk -i inplace -f $gawk_script $pacman_conf_c || true
+    gawk -i inplace -f $gawk_script $pacman_conf_c
     mv $pacman_conf $pacman_conf_b
     mv $pacman_conf_c $pacman_conf
     log
@@ -141,7 +140,7 @@ echo "[CachyOS]"
     else
         vendor=""
     fi
-    pacman -S paru sudo networkmanager linux-cachyos $vendor
+    pacman -S paru sudo networkmanager linux-cachyos $vendor --noconfirm
 
     st="da"
     log "$vendor"
