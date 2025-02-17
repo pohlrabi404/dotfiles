@@ -111,22 +111,23 @@ echo "[Partition]"
         log
 
     log "DONE"
+echo "[Partition] DONE"
+
+echo "[Mount]"
 
     ident="  "
-    log "Mounting..."
+    st="p"
+    log "Root /mnt"
+    mount "${disk}2" /mnt>/dev/null
+    log
 
-        ident="    "
-        st="p"
-        log "Root /mnt"
-        mount "${disk}2" /mnt>/dev/null
-        log
+    st="p"
+    log "Boot /mnt/boot"
+    mount --mkdir "${disk}1" /mnt/boot>/dev/null
+    log
+echo "[Mount] DONE"
 
-        st="p"
-        log "Boot /mnt/boot"
-        mount --mkdir "${disk}1" /mnt/boot>/dev/null
-        log
-
-    log "DONE"
+echo "[Installation]"
 
     ident="  "
     st="p"
@@ -150,4 +151,14 @@ echo "[Partition]"
 
     st="p"
     log "Curl chroot script"
-    curl -O https://raw.githubusercontent.com/pohlrabi404/
+    curl -O https://raw.githubusercontent.com/pohlrabi404/dotfiles/refs/heads/main/scripts/chroot.sh
+    cp ./chroot.sh /mnt/chroot.sh
+    chmod +x /mnt/chroot.sh
+    log
+
+    st="p"
+    log "Chroot"
+    arch-chroot /mnt ./chroot.sh
+    umount -R /mnt
+    rm install.sh
+echo "[Installation] DONE"
