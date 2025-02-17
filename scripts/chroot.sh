@@ -39,7 +39,7 @@ add_supported_repo() {
     local is_v4=$(echo $supported | grep 'v4')
     local is_v3=$(echo $supported | grep 'v3')
     
-    cd /scripts
+    cd /dotfiles/scripts
      
     local pacman_conf="/etc/pacman.conf"
     local pacman_conf_c="./pacman.conf"
