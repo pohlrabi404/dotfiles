@@ -38,6 +38,8 @@ add_supported_repo() {
 
     local is_v4=$(echo $supported | grep 'v4')
     local is_v3=$(echo $supported | grep 'v3')
+    
+    cd /scripts
      
     local pacman_conf="/etc/pacman.conf"
     local pacman_conf_c="./pacman.conf"
@@ -74,6 +76,8 @@ add_supported_repo() {
     mv $pacman_conf $pacman_conf_b
     mv $pacman_conf_c $pacman_conf
     log
+
+    cd /
 }
 
 echo "[Disk]"
