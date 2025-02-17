@@ -150,15 +150,13 @@ echo "[Installation]"
     log
 
     st="p"
-    log "Curl chroot script"
-    curl -O https://raw.githubusercontent.com/pohlrabi404/dotfiles/refs/heads/main/scripts/chroot.sh
-    cp ./chroot.sh /mnt/chroot.sh
-    chmod +x /mnt/chroot.sh
+    log "Move scripts"
+    cp -r ../scripts/ /mnt/
     log
 
     st="p"
     log "Chroot"
-    arch-chroot /mnt ./chroot.sh
+    arch-chroot /mnt ./scripts/chroot.sh
     umount -R /mnt
     rm install.sh
 echo "[Installation] DONE"
