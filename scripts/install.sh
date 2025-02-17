@@ -151,12 +151,12 @@ echo "[Installation]"
 
     st="p"
     log "Move scripts"
-    cp -r ../scripts /mnt
+    mv /dotfiles /mnt
     log
 
     st="p"
     log "Chroot"
-    arch-chroot /mnt ./scripts/chroot.sh
+    arch-chroot /mnt ./dotfiles/scripts/chroot.sh
     umount -R /mnt
-    rm install.sh
 echo "[Installation] DONE"
+reboot

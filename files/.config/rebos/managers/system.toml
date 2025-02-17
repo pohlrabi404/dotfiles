@@ -1,0 +1,19 @@
+# --------------------------- #
+#    Manager Configuration    #
+# --------------------------- #
+
+add = "paru -S --needed --noconfirm #:?" # Example: sudo apt install #:?
+remove = "paru -Rns --noconfirm #:?" # Example: sudo apt remove #:?
+sync = "paru -Syy --needed --noconfirm" # Example: sudo apt update
+upgrade = "paru -Syyu --needed --noconfirm" # Example: sudo apt upgrade
+
+# ------------------------------- #
+#    Additional configuration.    #
+# ------------------------------- #
+
+plural_name = "system packages"
+
+hook_name = "system_packages"
+
+[config]
+many_args = true

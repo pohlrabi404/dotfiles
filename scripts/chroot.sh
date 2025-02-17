@@ -72,7 +72,7 @@ add_supported_repo() {
     st="p"
     log "Change config and backup"
     cp $pacman_conf $pacman_conf_c || true
-    gawk -i inplace -f $gawk_script $pacman_conf_c
+    gawk -i inplace -f $gawk_script $pacman_conf_c || true
     mv $pacman_conf $pacman_conf_b
     mv $pacman_conf_c $pacman_conf
     log
@@ -104,7 +104,8 @@ echo "[Localization]"
 
     st="p"
     log "Locale"
-    echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+    echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+    echo "ja_JP.UTF-8 UTF-8" >> /etc/locale.gen
     locale-gen>/dev/null
     echo "LANG=en_US.UTF-8" > /etc/locale.conf
     st="da"
@@ -213,17 +214,6 @@ EOF
     systemctl enable NetworkManager>/dev/null
     log
 
-    st="p"
-    log "Connect wifi"
-    cd /
-    SSID=$(ls | grep ".psk" | sed "s/.psk//")
-    psk_file="/$SSID.psk"
-    password=$(sudo grep 'Passphrase=' "$psk_file" | cut -d= -f2)
-    until nmcli -t -f STATE general | grep -q "connected"; do
-        sleep 2
-    done
-    nmcli device wifi connect "$SSID" password "$password"
-    log
 echo "[Network] DONE"
 
 echo "[Security]"
@@ -248,3 +238,11 @@ EOF
     echo "auto optional pam_faildelay.so delay=10000" >> /etc/pam.d/system-login
     log
 echo "[Security] DONE"
+
+echo "[Dotfiles]"
+    ident="  "
+    st="p"
+    log "Move dotfiles to home"
+    mv /dotfiles /home/pohlrabi/.dotfiles
+    log
+echo "[Dotfiles] DONE"

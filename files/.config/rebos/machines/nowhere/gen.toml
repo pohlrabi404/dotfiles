@@ -1,0 +1,18 @@
+# --------------------- #
+#    Generation File    #
+# --------------------- #
+
+imports = [
+	"system",
+	"apps",
+    "user",
+]
+
+[managers.system]
+items = []
+
+[managers.flatpak]
+items = []
+
+[managers.cargo]
+items = []

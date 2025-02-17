@@ -1,0 +1,36 @@
+[managers.system]
+items = [
+	# ssh
+	"openssh",
+
+	# shell
+	"zsh",
+	"zsh-syntax-highlighting",
+	"zsh-autocomplete",
+	"zsh-autosuggestions",
+
+	# kernel scheduler
+	"scx-scheds-git",
+
+	# system audio
+	"sof-firmware",
+
+    # display manager
+    "greetd-tuigreet",
+
+	## volume
+	"pipewire",
+    "pipewire-audio",
+    "pipewire-alsa",
+    "pipewire-pulse",
+	"wireplumber",
+	"playerctl",
+    "alsa-firmware",
+
+    # file system
+    "fuse3",
+    "fuse2",
+
+    # dependencies for wayland
+    "libffi",
+]
