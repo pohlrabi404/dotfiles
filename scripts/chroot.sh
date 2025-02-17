@@ -8,8 +8,8 @@ level="INFO"
 st="n" #e:error, n:normal, p:progress, d:done
 cache="" #tbh idk if this is a good idea
 
-is_amd=$(lscpu | grep "Vendor ID" | grep "AMD")
-is_intel=$(lscpu | grep "Vendor ID" | grep "Intel")
+is_amd=$(lscpu | grep "Vendor ID" | grep "AMD") || true
+is_intel=$(lscpu | grep "Vendor ID" | grep "Intel") || true
 
 log() {
     local message=$1

@@ -151,7 +151,7 @@ echo "[Installation]"
 
     st="p"
     log "Move scripts"
-    mv ~/dotfiles /mnt
+    cp -r ~/dotfiles /mnt
     log
 
     st="p"

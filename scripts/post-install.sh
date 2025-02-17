@@ -65,7 +65,7 @@ Server = https://gitlab.com/Oglo12/\$repo/-/raw/main/\$arch
 EOF
     sudo rm -f /etc/pacman.conf
     sudo mv tmp /etc/pacman.conf
-    sudo pacman -Sye
+    sudo pacman -Syy
     sudo pacman -S rebos
 
     cd $HOME/.dotfiles
@@ -116,8 +116,8 @@ EOF
     QT_IM_MODULE=fcitx
     XMODIFIERS=@im=fcitx
 EOF
-    rm /etc/environment || true
-    mv tmp /etc/environment
+    sudo rm /etc/environment
+    sudo mv tmp /etc/environment
     log
 echo "[Apps] DONE"
 reboot
