@@ -105,7 +105,7 @@ echo "[Partition]"
         log
 
         st="p"
-        log "Root: 2GiB -> 100%"
+        log "Root: 2GiB -> 100%%"
         parted --script $disk  mkpart root ext4 2GiB 100%
         mkfs.ext4 -F "${disk}2"
         log
