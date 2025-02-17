@@ -30,33 +30,11 @@ log() {
     fi
 }
 
-# echo "[Network]"
-#     ident="  "
-#     st="p"
-#     log "Reconnect previous connection"
-#     cd /
-#     SSID=$(ls | grep ".psk" | sed "s/.psk//")
-#     psk_file="/$SSID.psk"
-#     password=$(sudo grep 'Passphrase=' "$psk_file" | cut -d= -f2)
-#     until nmcli -t -f STATE general | grep -q "connected"; do
-#         sleep 2
-#     done
-#     nmcli device wifi connect "$SSID" password "$password"
-#     st="da"
-#     log "$SSID"
-#
-#     st="p"
-#     log "Remove old connetion file"
-#     rm $psk_file
-#     log
-#
-# echo "[Network] DONE"
-
 echo "[Apps]"
     ident="  "
     st="p"
     log "Rebos"
-    sudo pacman -S stow
+    sudo pacman -S stow --noconfirm
     cat /etc/pacman.conf > tmp
     cat <<EOF >>tmp
 [oglo-arch-repo]
@@ -66,7 +44,7 @@ EOF
     sudo rm -f /etc/pacman.conf
     sudo mv tmp /etc/pacman.conf
     sudo pacman -Syy
-    sudo pacman -S rebos
+    sudo pacman -S rebos --noconfirm
 
     cd $HOME/.dotfiles
     stow -v files
@@ -98,23 +76,6 @@ EOF
     cp -r ./icons $HOME/.local/share
     log
 
-    st="p"
-    log "Anyrun"
-    rm -r /etc/anyrun
-    log
-
-    st="p"
-    log "Yazi theme"
-    ya pack -a bennyyip/gruvbox-dark
-    log
-
-    st="p"
-    log "Language input"
-    cat /etc/environment > tmp
-    cat <<EOF >> tmp 
-    GTK_IM_MODULE=fcitx
-    QT_IM_MODULE=fcitx
-    XMODIFIERS=@im=fcitx
 EOF
     sudo rm /etc/environment
     sudo mv tmp /etc/environment

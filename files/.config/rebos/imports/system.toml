@@ -2,6 +2,7 @@
 items = [
     # linux
     "linux-firmware",
+    "cachyos-settings",
 
 	# ssh
 	"openssh",
