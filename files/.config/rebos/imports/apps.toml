@@ -3,10 +3,6 @@ items = [
 	# browser
 	"qutebrowser",
 
-    # vial        
-    "vial-appimage",
-
     # editor
-    "neovim",
     "emacs",
 ]

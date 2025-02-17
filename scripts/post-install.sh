@@ -57,15 +57,16 @@ echo "[Apps]"
     st="p"
     log "Rebos"
     sudo pacman -S stow
-    cat /etc/pacman.conf tmp
+    cat /etc/pacman.conf > tmp
     cat <<EOF >>tmp
 [oglo-arch-repo]
 SigLevel = Optional DatabaseOptional
-Server = https://gitlab.com/Oglo12/$repo/-/raw/main/$arch
+Server = https://gitlab.com/Oglo12/\$repo/-/raw/main/\$arch
 EOF
     sudo rm -f /etc/pacman.conf
     sudo mv tmp /etc/pacman.conf
-    sudo pacman -Syy
+    sudo pacman -Sye
+    sudo pacman -S rebos
 
     cd $HOME/.dotfiles
     stow -v files
@@ -73,16 +74,6 @@ EOF
     rebos config init
     rebos gen commit "init"
     rebos gen current build
-    log
-
-    st="p"
-    log "Greetd"
-    sudo rm -rf /etc/greetd || true
-    sudo mkdir -p /etc/greetd || true
-    sudo cp -r greetd /etc/greetd
-    sudo systemctl enable greetd
-    sudo usermod -a -G video greeter
-    sudo chown greeter /etc/greetd
     log
 
     st="p"
@@ -98,7 +89,7 @@ EOF
 
     st="p"
     log "Setup Zsh"
-    sudo chsh -s /usr/bin/zsh
+    chsh -s /usr/bin/zsh
     sudo usermod -a -G wheel,audio,video -s /bin/zsh $USER
     log
 

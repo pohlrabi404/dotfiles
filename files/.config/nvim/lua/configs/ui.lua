@@ -1,2 +1,0 @@
-require("nvchad")
-require("nvconfig")

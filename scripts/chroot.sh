@@ -8,6 +8,9 @@ level="INFO"
 st="n" #e:error, n:normal, p:progress, d:done
 cache="" #tbh idk if this is a good idea
 
+is_amd=$(lscpu | grep "Vendor ID" | grep "AMD")
+is_intel=$(lscpu | grep "Vendor ID" | grep "Intel")
+
 log() {
     local message=$1
     if [[ "$st" == "p" ]]; then
@@ -134,11 +137,6 @@ echo "[CachyOS]"
 
     st="p"
     log "Get vendor"
-    # is_amd=$(lscpu | grep "Vendor ID" | grep "AMD")
-    # is_intel=$(lscpu | grep "Vendor ID" | grep "Intel")
-
-    is_amd=""
-    is_intel="weird"    
 
     if [[ -n $is_amd ]]; then
         vendor="amd-ucode"
@@ -244,5 +242,6 @@ echo "[Dotfiles]"
     st="p"
     log "Move dotfiles to home"
     mv /dotfiles /home/pohlrabi/.dotfiles
+    chown pohlrabi /home/pohlrabi/.dotfiles
     log
 echo "[Dotfiles] DONE"

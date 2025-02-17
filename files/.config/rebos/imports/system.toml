@@ -1,5 +1,8 @@
 [managers.system]
 items = [
+    # linux
+    "linux-firmware",
+
 	# ssh
 	"openssh",
 
@@ -14,9 +17,6 @@ items = [
 
 	# system audio
 	"sof-firmware",
-
-    # display manager
-    "greetd-tuigreet",
 
 	## volume
 	"pipewire",

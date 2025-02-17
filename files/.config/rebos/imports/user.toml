@@ -6,10 +6,6 @@ items = [
 	# git
 	"lazygit",
 
-	# file browser
-	"yazi",
-	"fzf",
-
 	# zsh theme and plugins
 	"starship",
 
@@ -22,9 +18,6 @@ items = [
     "unzip",
     "npm",
     "go",
-
-    # app runner
-    "anyrun-git",
 
     # theme
     "ags-hyprpanel-git",
@@ -65,11 +58,4 @@ items = [
     "mpv",
     "svp-bin",
     "yt-dlp",
-
-    # japanese input
-    "fcitx5-im",
-    "fcitx5-mozc",
-
-    # flex
-    "fastfetch",
 ]
