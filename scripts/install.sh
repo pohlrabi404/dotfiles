@@ -132,7 +132,7 @@ echo "[Installation]"
     ident="  "
     st="p"
     log "Bootstrap"
-    pacstrap -K /mnt base networkmanager amd-ucode sudo
+    pacstrap -K /mnt base
     log
 
     st="p"

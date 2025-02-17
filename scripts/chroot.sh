@@ -30,6 +30,53 @@ log() {
     fi
 }
 
+add_supported_repo() {
+    st="p"
+    log "Get supported system"
+    local supported=$(/lib/ld-linux-x86-64.so.2 --help | grep supported | sed 's/x86-64-\(\w\{2\}\).*$/\1/g')
+    local znver_supported=$(gcc -march=native -Q --help=target 2>&1 | head -n 35 | grep -E '(znver4|znver5)')
+
+    local is_v4=$(echo $supported | grep 'v4')
+    local is_v3=$(echo $supported | grep 'v3')
+     
+    local pacman_conf="/etc/pacman.conf"
+    local pacman_conf_c="./pacman.conf"
+    local pacman_conf_b="/etc/pacman.conf.bak"
+
+    if [[ -n $is_v4 ]] && [[ -n $znver_supported ]]; then
+        local isa_level="x86-64-v4"
+        local gawk_script="./install-znver4-repo.awk"
+        local repo_name="cachyos-znver4"
+        st="da"
+        log "$repo_name"
+    elif [[ -n $is_v4 ]]; then
+        local isa_level="x86-64-v4"
+        local gawk_script="./install-v4-repo.awk"
+        local repo_name="cachyos-v4"
+        st="da"
+        log "$repo_name"
+    elif [[ -n $is_v3 ]]; then
+        local isa_level="x86-64-v3"
+        local gawk_script="./install-v3-repo.awk"
+        local repo_name="cachyos-v3"
+        st="da"
+        log "$repo_name"
+    else
+        local isa_level="x86-64"
+        local gawk_script="./install-repo.awk"
+        st="da"
+        log "$isa_level"
+    fi
+
+    st="p"
+    log "Change config and backup"
+    cp $pacman_conf $pacman_conf_c
+    gawk -i inplace -f $gawk_script $pacman_conf_c || true
+    mv $pacman_conf $pacman_conf_b
+    mv $pacman_conf_c $pacman_conf
+    log
+}
+
 echo "[Disk]"
     ident="  "
     st="p"
@@ -61,6 +108,81 @@ echo "[Localization]"
     log "en_US"
 echo "[Localization] DONE"
 
+echo "[CachyOS]"
+    ident="  "
+    st="p"
+    log "Add CachyOS signing keys"
+    pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
+    pacman-key --lsign-key F3B607488DB35A47
+    log
+
+    st="p"
+    log "Required packages"
+    mirror_url="https://mirror.cachyos.org/repo/x86_64/cachyos"
+    pacman -U "${mirror_url}/cachyos-keyring-20240331-1-any.pkg.tar.zst" \
+              "${mirror_url}/cachyos-mirrorlist-18-1-any.pkg.tar.zst"    \
+              "${mirror_url}/cachyos-v3-mirrorlist-18-1-any.pkg.tar.zst" \
+              "${mirror_url}/cachyos-v4-mirrorlist-6-1-any.pkg.tar.zst"  \
+              "${mirror_url}/pacman-7.0.0.r6.gc685ae6-2-x86_64.pkg.tar.zst"
+    log
+
+    add_supported_repo
+    pacman -Syu --noconfirm
+
+    st="p"
+    log "Get vendor"
+    is_amd=$(lscpu | grep "Vendor ID" | grep "AMD")
+    is_intel=$(lscpu | grep "Vendor ID" | grep "Intel")
+     
+    if [[ -n $is_amd ]]; then
+        vendor="amd-ucode"
+    elif [[ -n $is_intel ]]; then
+        vendor="intel-ucode"
+    else
+        vendor=""
+    fi
+    pacman -S paru sudo networkmanager linux-cachyos $vendor
+
+    st="da"
+    log "$vendor"
+
+    st="p"
+    log "Bootloader"
+    bootctl install >/dev/null
+    cat <<EOF > /boot/loader/loader.conf
+default                        arch.conf
+timeout                        2
+console-mode                   auto
+editor                         no
+EOF
+    log
+
+    st="p"
+    log "Entries"
+    root_part="${disk}2"
+    root_uuid=$(blkid -s UUID -o value $root_part)
+    if [[ -n $vendor ]]; then
+        vendor_fix="initrd                         /$vendor.img"
+    else
+        vendor_fix=""
+    fi
+    cat <<EOF > /boot/loader/entries/arch.conf
+title                          Pohlinux 
+linux                          /vmlinuz-linux-cachyos
+$vendor_fix
+initrd                         /initramfs-linux-cachyos.img
+options                        root=UUID=${root_uuid} rw
+EOF
+    cat <<EOF > /boot/loader/entries/arch-fallback.conf
+title                          Pohlinux (fallback)
+linux                          /vmlinuz-linux-cachyos
+$vendor_fix
+initrd                         /initramfs-linux-cachyos-fallback.img
+options                        root=UUID=${root_uuid} rw
+EOF
+    log
+echo "[Cachyos] DONE"
+
 echo "[Network]"
     ident="  "
     st="p"
@@ -83,61 +205,25 @@ EOF
     log "Enable NetworkManager"
     systemctl enable NetworkManager>/dev/null
     log
+
+    st="p"
+    log "Connect wifi"
+    SSID=$(cat /ssid)
+    psk_file="/$SSID.psk"
+    password=$(sudo grep 'Passphrase=' "$psk_file" | cut -d= -f2)
+    until nmcli -t -f STATE general | grep -q "connected"; do
+        sleep 2
+    done
+    nmcli device wifi connect "$SSID" password "$password"
+    log
 echo "[Network] DONE"
-
-echo "[Boot]"
-    ident="  "
-    st="p"
-    log "Bootloader"
-    bootctl install >/dev/null
-    cat <<EOF > /boot/loader/loader.conf
-default                        arch.conf
-timeout                        2
-console-mode                   auto
-editor                         no
-EOF
-    log
-
-    st="p"
-    log "Entries"
-    root_part="${disk}2"
-    root_uuid=$(blkid -s UUID -o value $root_part)
-    cat <<EOF > /boot/loader/entries/arch.conf
-title                          Arch Linux
-linux                          /vmlinuz-linux
-initrd                         /amd-ucode.img
-initrd                         /initramfs-linux.img
-options                        root=UUID=${root_uuid} rw
-EOF
-    cat <<EOF > /boot/loader/entries/arch-fallback.conf
-title                          Arch Linux (fallback)
-linux                          /vmlinuz-linux
-initrd                         /amd-ucode.img
-initrd                         /initramfs-linux-fallback.img
-options                        root=UUID=${root_uuid} rw
-EOF
-    log
-echo "[Boot] DONE"
-
-echo "[Cachyos]"
-    ident="  "
-    log "Install Cachyos Repo"
-    curl -O https://mirror.cachyos.org/cachyos-repo.tar.xz
-    tar xvf cachyos-repo.tar.xz && cd cachyos-repo
-    ./cachyos-repo.sh
-    cd ..
-
-    rm -rf cachyos-repo
-    rm cachyos-repo.tar.xz
-    pacman -Syu --noconfirm
-echo "[Cachyos] DONE"
 
 echo "[Security]"
     ident="  "
     echo "[Password] Root:"
     passwd
 
-    user -m pohlrabi
+    useradd -m pohlrabi
     echo "[Password] pohlrabi:"
     passwd pohlrabi
 
