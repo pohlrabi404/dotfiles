@@ -72,9 +72,12 @@ base0F = "#d65d0e"
 # set qutebrowser colors
 
 # darkmode
+c.colors.webpage.preferred_color_scheme = 'dark'
 c.colors.webpage.darkmode.enabled = True
 c.colors.webpage.darkmode.policy.images = "smart"
 c.colors.webpage.darkmode.algorithm = "lightness-cielab"
+c.colors.webpage.darkmode.threshold.foreground = 150
+c.colors.webpage.darkmode.threshold.background = 100
 
 # Text color of the completion widget. May be a single color to use for
 # all columns or a list of three colors, one for each column.

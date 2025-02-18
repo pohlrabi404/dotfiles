@@ -1,7 +1,6 @@
 [managers.system]
 items = [
     # linux
-    "linux-firmware",
     "cachyos-settings",
 
     # display manager

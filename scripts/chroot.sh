@@ -147,7 +147,7 @@ echo "[CachyOS]"
     fi
 
     pacman -Syu --noconfirm
-    pacman -S paru sudo networkmanager linux-cachyos $vendor --noconfirm
+    pacman -S paru sudo networkmanager linux-cachyos linux-firmware $vendor --noconfirm
 
     st="da"
     log "$vendor"
