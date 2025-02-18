@@ -1,0 +1,11 @@
+[manager]
+show_hidden = true
+sort_dir_first = true
+sort_by = "natural"
+line_mode = "size"
+show_Symlink = true
+scroll_off = 200
+
+[preview]
+wrap = "yes"
+tab_size = 4

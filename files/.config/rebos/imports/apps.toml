@@ -5,4 +5,17 @@ items = [
 
     # editor
     "emacs",
+	"neovim",
+
+	# runner
+	"anyrun-git",
+
+	# file browser
+	"yazi",
+	"fzf",
+
+    # mpv
+    "mpv",
+    "svp-bin",
+    "yt-dlp",
 ]

@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+
 # log utils
 log="install.log"
 ident=""

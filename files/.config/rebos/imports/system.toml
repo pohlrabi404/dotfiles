@@ -4,6 +4,9 @@ items = [
     "linux-firmware",
     "cachyos-settings",
 
+    # display manager
+    "greetd-tuigreet",
+
 	# ssh
 	"openssh",
 
@@ -27,6 +30,7 @@ items = [
 	"wireplumber",
 	"playerctl",
     "alsa-firmware",
+    "realtime-privileges",
 
     # file system
     "fuse3",

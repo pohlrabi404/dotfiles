@@ -47,7 +47,7 @@ EOF
     sudo pacman -S rebos --noconfirm
 
     cd $HOME/.dotfiles
-    stow -v files
+    stow -v --no-folding files
     rebos setup
     rebos config init
     rebos gen commit "init"
@@ -76,9 +76,36 @@ EOF
     cp -r ./icons $HOME/.local/share
     log
 
-EOF
-    sudo rm /etc/environment
-    sudo mv tmp /etc/environment
+    st="p"
+    log "Greetd"
+    sudo systemctl enable greetd.service
+    sudo rm /etc/greetd/config.toml
+    sudo ln -s $HOME/.dotfiles/greetd/config.toml /etc/greetd/config.toml 
     log
+
 echo "[Apps] DONE"
+
+echo "[Optimization]"
+    ident="  "
+    st="p"
+    log "Scheduler"
+    cat <<EOF > tmp
+default_sched = "scx_lavd"
+default_mode = auto
+
+[scheds.scx_lavd]
+auto_mode = []
+gaming_mode = ["--performance"]
+lowlatency_mode = ["--performance"]
+powersave_mode = ["--powersave"]
+EOF
+    sudo mkdir -p /etc/scx_loader/
+    sudo mv tmp /etc/scx_loader/config.toml
+    log
+
+    st="p"
+    log "Audio"
+    sudo gpasswd -a $USER realtime
+    log
+echo "[Optimization] DONE"
 reboot

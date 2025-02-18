@@ -54,8 +54,4 @@ items = [
     # keycode
     "wev",
 
-    # mpv
-    "mpv",
-    "svp-bin",
-    "yt-dlp",
 ]

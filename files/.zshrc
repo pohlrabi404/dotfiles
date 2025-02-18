@@ -10,7 +10,8 @@ rein(){
     rebos gen current build
 }
 
-export EDITOR=nvim
+export ALTERNATIVE_EDITOR="nvim"
+export EDITOR="emacsclient -c -a emacs"
 export VISUAL=$EDITOR
 export KEYTIMEOUT=5
 
@@ -32,7 +33,7 @@ source <(starship init zsh)
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 
-function y() {
+y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi "$@" --cwd-file="$tmp"
 	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
