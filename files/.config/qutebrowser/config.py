@@ -27,9 +27,6 @@ c.hints.padding = {
 c.hints.radius = 0
 # c.hints.border = '1px solid ' + c2
 
-c.url.start_pages = [
-        'https://discord.com/channels/@me',
-        ]
 c.url.searchengines = {
         'DEFAULT': 'https://duckduckgo.com/?q={}',
         '!yt': 'https://www.youtube.com/results?search_query={}',
@@ -74,6 +71,7 @@ base0F = "#d65d0e"
 # darkmode
 c.colors.webpage.preferred_color_scheme = 'dark'
 c.colors.webpage.darkmode.enabled = True
+config.set('colors.webpage.darkmode.enabled', False, '*://discord.com/*')
 c.colors.webpage.darkmode.policy.images = "smart"
 c.colors.webpage.darkmode.algorithm = "lightness-cielab"
 c.colors.webpage.darkmode.threshold.foreground = 150

@@ -5,6 +5,8 @@ items = [
 
     # editor
     "emacs",
+	"ripgrep",
+
 	"neovim",
 
 	# runner
@@ -18,4 +20,7 @@ items = [
     "mpv",
     "svp-bin",
     "yt-dlp",
+	
+	# vial
+	"vial-appimage",
 ]

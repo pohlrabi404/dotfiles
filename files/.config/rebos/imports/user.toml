@@ -11,7 +11,7 @@ items = [
 
 	# font
 	"ttf-firacode-nerd",
-    "ttf-koruri",
+	"ttf-koruri",
 
     # nodejs
     "nodejs",
@@ -53,5 +53,4 @@ items = [
 
     # keycode
     "wev",
-
 ]

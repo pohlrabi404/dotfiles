@@ -37,4 +37,7 @@ items = [
 
     # dependencies for wayland
     "libffi",
+
+	# hardware detection
+	"chwd",
 ]
