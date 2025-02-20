@@ -35,30 +35,54 @@
 			  ("C-h" . backward-kill-word))
   :init
   (vertico-mode 1))
+(use-package corfu ; lsp completion at point
+  :ensure t 
+  :custom
+  (corfu-preselect 'prompt)
+  :init
+  (global-corfu-mode)
+  (setq corfu-auto t
+		corfu-quit-no-match 'separator)
+  )
+(use-package lsp-mode
+  :ensure t
+  :init
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (
+		 (bash-ts-mode . lsp)
+		 (lisp-mode . lsp)
+		 (rust-ts-mode . lsp)
+		 (python-ts-mode . use)
+		 )
+  :commands lsp
+  )
+(use-package emacs ; some emacs config
+  :custom
+  (tab-always-indent 'complete)) 
 (use-package marginalia
-  :ensure t (:wait t)
+  :ensure t 
   :demand t
   :init
   (marginalia-mode 1))
 (use-package orderless
-  :ensure t (:wait t)
+  :ensure t 
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (style basic partial-completion)))))
 
-(use-package transient
-  :ensure t (:wait t))
+(use-package transient ; git things = magit + transient
+  :ensure t )
 (use-package magit 
-  :ensure t (:wait t))
+  :ensure t )
 (use-package evil-collection
-  :ensure t (:wait t)
+  :ensure t 
   :after evil
   :init
   (setq evil-want-keybinding nil)
   (evil-collection-init))
-(use-package fzf
+
+(use-package fzf ; lovely file browsing
   :ensure t
-  (:wait t)
   :bind (
 		 ("C-x C-f" . fzf)
 		 ("C-x C-d" . fzf-grep-dwim)
@@ -88,7 +112,7 @@
 (scroll-bar-mode -1)
 
 (use-package gruvbox-theme
-  :ensure t (:wait t)
+  :ensure t 
   :demand t
   :init
   (load-theme 'gruvbox t)
