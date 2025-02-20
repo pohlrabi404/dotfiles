@@ -26,9 +26,8 @@
   (setq xref-show-xrefs-function #'consult-xref
 		xref-show-definitions-function #'consult-xref)
   )
-
-(use-package vertico
-  :ensure t (:wait t)
+(use-package vertico ; completion engine
+  :ensure t 
   :bind (:map vertico-map
 			  ("C-j" . vertico-next)
 			  ("C-k" . vertico-previous)
