@@ -1,25 +1,22 @@
-;; ssh-agent
-(defun add-ssh-key (key-path)
-  (let ((passphrase (read-passwd (format "Passphrase for %s: " key-path))))
-	(shell-command (format "eval $(ssh-agent -s); ssh-add -k %s" key-path) nil nil)
-	))
-(defun add-ssh-key-startup()
-  (add-ssh-key "~/.ssh/id_dotfiles"))
-(add-hook 'emacs-startup-hook 'add-ssh-key-startup)
-
+;; package path
 (add-to-list 'load-path "~/.config/emacs/lisp/")
 
 ;; add packages with settings
 (require 'ps)
-(use-package evil
-  :ensure t (:wait t)
+(use-package exec-path-from-shell ;copy env from zsh
+  :ensure t
+  :init
+  (when (daemonp)
+	(exec-path-from-shell-initialize)))
+(use-package evil ;lovely vim keybinds
+  :ensure t 
   :demand t
   :init
   (setq evil-want-keybinding nil)
   (evil-mode 1))
 
-(use-package consult
-  :ensure t (:wait t)
+(use-package consult ; consult + vertico + marginalia + orderless = heaven
+  :ensure t 
   :demand t
   :bind (
 		 ("C-x b" . consult-buffer)
