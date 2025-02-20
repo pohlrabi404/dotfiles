@@ -1,7 +1,7 @@
 ;; ssh-agent
 (defun add-ssh-key (key-path)
   (let ((passphrase (read-passwd (format "Passphrase for %s: " key-path))))
-	(shell-command (format "ssh-add -k %s" key-path) nil nil)
+	(shell-command (format "eval $(ssh-agent -s); ssh-add -k %s" key-path) nil nil)
 	))
 (defun add-ssh-key-startup()
   (add-ssh-key "~/.ssh/id_dotfiles"))
