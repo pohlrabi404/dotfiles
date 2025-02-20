@@ -10,10 +10,6 @@ rein(){
     rebos gen current build
 }
 
-export ALTERNATIVE_EDITOR="nvim"
-export EDITOR="emacsclient -c -a emacs"
-export VISUAL=$EDITOR
-export KEYTIMEOUT=5
 
 HISTFILE=~/.histfile
 HISTSIZE=1000
