@@ -74,13 +74,6 @@
 	fzf/position-bottom t
 	fzf/window-height 15))
 
-(use-package gruvbox-theme
-  :ensure t (:wait t)
-  :demand t
-  :init
-  (load-theme 'gruvbox t)
-  )
-
 ;; add options related
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit) ;no more esc spamming
@@ -98,6 +91,12 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
+(use-package gruvbox-theme
+  :ensure t (:wait t)
+  :demand t
+  :init
+  (load-theme 'gruvbox t)
+  )
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
