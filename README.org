@@ -1,0 +1,1380 @@
+#+TITLE: Readme
+#+auto_tangle: t
+* TABLE OF CONTENT :toc:
+- [[#intro][INTRO]]
+- [[#scripts][SCRIPTS]]
+  - [[#install-script][INSTALL SCRIPT]]
+  - [[#chroot-script][CHROOT SCRIPT]]
+  - [[#post-install-script][POST INSTALL SCRIPT]]
+- [[#dotfiles][DOTFILES]]
+  - [[#apps][APPS]]
+  - [[#greetd][GREETD]]
+  - [[#zsh][ZSH]]
+  - [[#emacs][EMACS]]
+  - [[#qutebrowser][QUTEBROWSER]]
+  - [[#hyprland][HYPRLAND]]
+  - [[#app-launcher][APP LAUNCHER]]
+
+* INTRO
+Welcome to my own dotfiles for arch + cachyos optimization
+* SCRIPTS
+** INSTALL SCRIPT
+Set to auto exit when an error appear
+#+begin_src sh :tangle ./scripts/install.sh
+#!/bin/bash
+set -e
+#+end_src
+
+Utility function to log the progress during install
+#+begin_src sh :tangle ./scripts/install.sh
+ident=""
+level="INFO"
+st="n" #e:error, n:normal, p:progress, d:done
+log() {
+		local message=$1
+		if [[ "$st" == "p" ]]; then
+			st="d"
+			cache="$ident [$level] $message"
+			printf "$ident [$level] $message ..."
+		elif [[ "$st" == "d" ]]; then
+			st="n"
+			printf "\r$cache   \n"
+		elif [[ "$st" == "da" ]]; then
+			st="n"
+			printf "\r$cache $message \n"
+		elif [[ "$st" == "e" ]]; then
+			printf "\n"
+			level="ERROR"
+			printf "$ident [$level] $message\n"
+			exit 1
+		else
+			printf "$ident [$level] $message\n"
+		fi
+}
+#+end_src
+
+Set up date time to Japan
+#+begin_src sh :tangle ./scripts/install.sh
+echo "[Datetime]"
+
+		ident="  "
+		st="p"
+		log "Syncing datetime"
+		timedatectl | grep "synchronized: yes" >/dev/null 2>&1
+		if [[ -n $? ]]; then
+			log
+		else
+			st="e"
+			log "$LINENO: Sync datetime failed"
+		fi
+
+		st="p"
+		log "Set timezone"
+		timedatectl set-timezone Japan
+		if [ $? -eq 0 ]; then
+			st="da"
+			log "Japan"
+		else
+			st="e"
+			log "$LINENO: Set timezone failed"
+		fi
+echo "[Datetime] DONE"
+#+end_src
+
+Set up partition
+- Boot: 2GiB
+- Root: All
+- Swap: Zram
+#+begin_src sh :tangle ./scripts/install.sh
+echo "[Partition]"
+		ident="  "
+		st="p"
+		log "Set disk"
+		disk=$(lsblk -no NAME,TYPE | awk '$2 == "disk" && $1 != "loop0" {print "/dev/"$1; exit}')
+		if [[ -n $disk ]]; then
+			st="da"
+			log "$disk"
+		else
+			st="e"
+			log "$LINENO: Can not find suitable disk"
+		fi
+
+		log "Wipe disk..."
+
+			ident="    "
+			st="p"
+			log "Unmount"
+			umount -R /mnt 2>/dev/null || true
+			log
+
+			st="p"
+			log "Swapoff"
+			swapoff "${disk}2" 2>/dev/null || true
+			log
+
+			st="p"
+			log "Wipe partitions"
+			wipefs --all --force $disk >/dev/null
+			log
+
+		log "DONE"
+
+		ident="  "
+		log "Partitioning..."
+
+			ident="    "
+			st="p"
+			log "Label"
+			parted --script $disk mklabel gpt
+			log
+
+			st="p"
+			log "Boot: 1MiB -> 2GiB"
+			parted --script $disk mkpart ESP fat32 1MiB 2GiB >/dev/null
+			parted --script $disk set 1 esp on
+			mkfs.fat -F 32 "${disk}1"
+			log
+
+			st="p"
+			log "Root: 2GiB -> 100%%"
+			parted --script $disk  mkpart root ext4 2GiB 100%
+			mkfs.ext4 -F "${disk}2"
+			log
+
+		log "DONE"
+echo "[Partition] DONE"
+#+end_src
+
+Start mounting to /mnt and /mnt/boot for boot partition
+#+begin_src sh :tangle ./scripts/install.sh
+echo "[Mount]"
+
+		ident="  "
+		st="p"
+		log "Root /mnt"
+		mount "${disk}2" /mnt>/dev/null
+		log
+
+		st="p"
+		log "Boot /mnt/boot"
+		mount --mkdir "${disk}1" /mnt/boot>/dev/null
+		log
+echo "[Mount] DONE"
+#+end_src
+
+Installation process + active chroot script
+#+begin_src sh :tangle ./scripts/install.sh
+echo "[Installation]"
+
+		ident="  "
+		st="p"
+		log "Bootstrap"
+		pacstrap -K /mnt base
+		log
+
+		st="p"
+		log "Fstab"
+		genfstab -U /mnt >> /mnt/etc/fstab
+		log
+
+		st="p"
+		log "Save wifi info"
+		cd /var/lib/iwd>/dev/null
+		SSID=$(ls *.psk | head -n1 | sed 's/.psk//')>/dev/null
+		echo "$SSID" > /mnt/ssid>/dev/null
+		cp $SSID.psk /mnt/>/dev/null
+		cd
+		log
+
+		st="p"
+		log "Move scripts"
+		cp -r ~/dotfiles /mnt
+		log
+
+		st="p"
+		log "Chroot"
+		arch-chroot /mnt ./dotfiles/scripts/chroot.sh
+		umount -R /mnt
+echo "[Installation] DONE"
+reboot
+#+end_src
+
+** CHROOT SCRIPT
+Exit when error appear
+#+begin_src sh ./scripts/chroot.sh
+#!/bin/bash
+set -e
+#+end_src
+
+Utility function
+#+begin_src sh ./scripts/chroot.sh
+log="install.log"
+ident=""
+level="INFO"
+st="n" #e:error, n:normal, p:progress, d:done
+cache="" #tbh idk if this is a good idea
+
+
+log() {
+		local message=$1
+		if [[ "$st" == "p" ]]; then
+			st="d"
+			cache="$ident [$level] $message"
+			printf "$ident [$level] $message ..."
+		elif [[ "$st" == "d" ]]; then
+			st="n"
+			printf "\r$cache   \n"
+		elif [[ "$st" == "da" ]]; then
+			st="n"
+			printf "\r$cache $message \n"
+		elif [[ "$st" == "e" ]]; then
+			printf "\n"
+			level="ERROR"
+			printf "$ident [$level] $message\n"
+			exit 1
+		else
+			printf "$ident [$level] $message\n"
+		fi
+}
+
+#+end_src
+
+Call to scripts to ensure correct repo is added to specific system
+#+begin_src sh ./scripts/chroot.sh
+add_supported_repo() {
+		st="p"
+		log "Get supported system"
+		local supported=$(/lib/ld-linux-x86-64.so.2 --help | grep supported | sed 's/x86-64-\(\w\{2\}\).*$/\1/g')
+		local znver_supported=$(gcc -march=native -Q --help=target 2>&1 | head -n 35 | grep -E '(znver4|znver5)')
+
+		local is_v4=$(echo $supported | grep 'v4')
+		local is_v3=$(echo $supported | grep 'v3')
+
+		cd /dotfiles/scripts
+
+		local pacman_conf="/etc/pacman.conf"
+		local pacman_conf_c="./pacman.conf"
+		local pacman_conf_b="/etc/pacman.conf.bak"
+
+		local isa_level="x86-64-v4"
+		local gawk_script="./install-znver4-repo.awk"
+		local repo_name="cachyos-znver4"
+
+		if [[ -n $is_v4 ]] && [[ -n $znver_supported ]]; then
+			isa_level="x86-64-v4"
+			gawk_script="./install-znver4-repo.awk"
+			repo_name="cachyos-znver4"
+		elif [[ -n $is_v4 ]]; then
+			isa_level="x86-64-v4"
+			gawk_script="./install-v4-repo.awk"
+			repo_name="cachyos-v4"
+		elif [[ -n $is_v3 ]]; then
+			isa_level="x86-64-v3"
+			gawk_script="./install-v3-repo.awk"
+			repo_name="cachyos-v3"
+		else
+			isa_level="x86-64"
+			gawk_script="./install-repo.awk"
+			repo_name="x86-64"
+		fi
+		st="da"
+		log "$repo_name"
+
+		st="p"
+		log "Change config and backup"
+		cp $pacman_conf $pacman_conf_c || true
+		gawk -i inplace -f $gawk_script $pacman_conf_c || true
+		mv $pacman_conf $pacman_conf_b
+		mv $pacman_conf_c $pacman_conf
+		log
+
+		cd /
+}
+#+end_src
+
+Get disk name
+#+begin_src sh ./scripts/chroot.sh
+echo "[Disk]"
+		ident="  "
+		st="p"
+		log "Set disk"
+		disk=$(lsblk -no NAME,TYPE | awk '$2 == "disk" && $1 != "loop0" {print "/dev/"$1; exit}')
+		if [[ -n $disk ]]; then
+			st="da"
+			log "$disk"
+		else
+			st="e"
+			log "$LINENO: Can not find suitable disk"
+		fi
+echo "[Disk] DONE"
+#+end_src
+
+Get localization
+#+begin_src sh ./scripts/chroot.sh
+echo "[Localization]"
+		ident="  "
+		st="p"
+		log "Clock"
+		ln -sf /usr/share/zoneinfo/Japan /etc/localtime
+		hwclock --systohc
+		log
+
+		st="p"
+		log "Locale"
+		echo "en_US.UTF-8 UTF-8" > /etc/locale.gen
+		echo "ja_JP.UTF-8 UTF-8" >> /etc/locale.gen
+		locale-gen>/dev/null
+		echo "LANG=en_US.UTF-8" > /etc/locale.conf
+		st="da"
+		log "en_US"
+echo "[Localization] DONE"
+#+end_src
+
+Bootloader setup and other Cachyos related
+#+begin_src sh ./scripts/chroot.sh
+echo "[CachyOS]"
+		ident="  "
+		st="p"
+		log "Add CachyOS signing keys"
+		pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
+		pacman-key --lsign-key F3B607488DB35A47
+		log
+
+		st="p"
+		log "Required packages"
+		mirror_url="https://mirror.cachyos.org/repo/x86_64/cachyos"
+		pacman -U "${mirror_url}/cachyos-keyring-20240331-1-any.pkg.tar.zst" \
+			      "${mirror_url}/cachyos-mirrorlist-18-1-any.pkg.tar.zst"    \
+			      "${mirror_url}/cachyos-v3-mirrorlist-18-1-any.pkg.tar.zst" \
+			      "${mirror_url}/cachyos-v4-mirrorlist-6-1-any.pkg.tar.zst"  \
+			      "${mirror_url}/pacman-7.0.0.r6.gc685ae6-2-x86_64.pkg.tar.zst"
+		log
+
+		add_supported_repo
+
+		st="p"
+		log "Get vendor"
+
+		is_amd=$(lscpu | grep "Vendor ID" | grep "AMD") || true
+		is_intel=$(lscpu | grep "Vendor ID" | grep "Intel") || true
+		if [[ -n $is_amd ]]; then
+			vendor="amd-ucode"
+		elif [[ -n $is_intel ]]; then
+			vendor="intel-ucode"
+		else
+			vendor=""
+		fi
+
+		pacman -Syu --noconfirm
+		pacman -S paru sudo networkmanager linux-cachyos linux-firmware $vendor --noconfirm
+
+		st="da"
+		log "$vendor"
+
+		st="p"
+		log "Bootloader"
+		bootctl install >/dev/null
+		cat <<EOF > /boot/loader/loader.conf
+default                        arch.conf
+timeout                        2
+console-mode                   auto
+editor                         no
+EOF
+		log
+
+		st="p"
+		log "Entries"
+		root_part="${disk}2"
+		root_uuid=$(blkid -s UUID -o value $root_part)
+		if [[ -n $vendor ]]; then
+			vendor_fix="initrd                         /$vendor.img"
+		else
+			vendor_fix=""
+		fi
+		cat <<EOF > /boot/loader/entries/arch.conf
+title                          Pohlinux
+linux                          /vmlinuz-linux-cachyos
+$vendor_fix
+initrd                         /initramfs-linux-cachyos.img
+options                        root=UUID=${root_uuid} rw
+EOF
+		cat <<EOF > /boot/loader/entries/arch-fallback.conf
+title                          Pohlinux (fallback)
+linux                          /vmlinuz-linux-cachyos
+$vendor_fix
+initrd                         /initramfs-linux-cachyos-fallback.img
+options                        root=UUID=${root_uuid} rw
+EOF
+		log
+echo "[Cachyos] DONE"
+#+end_src
+
+#+begin_src sh ./scripts/chroot.sh
+echo "[Network]"
+		ident="  "
+		st="p"
+		log "Hostname"
+		echo "nowhere" > /etc/hostname
+		log
+
+		st="p"
+		log "Hosts"
+		cat <<EOF > /etc/hosts
+127.0.0.1  localhost
+::1        localhost ip6-localhost ip6-loopback
+ff02::1    ip6-allnodes
+ff02::2    ip6-allrouters
+127.0.1.1  nowhere
+EOF
+		log
+
+		st="p"
+		log "Enable NetworkManager"
+		systemctl enable NetworkManager>/dev/null
+		log
+
+echo "[Network] DONE"
+
+echo "[Security]"
+		ident="  "
+		echo "[Password] Root:"
+		passwd
+
+		useradd -m pohlrabi
+		echo "[Password] pohlrabi:"
+		passwd pohlrabi
+
+		st="p"
+		log "Sudoers"
+		cat<<EOF > /etc/sudoers
+root ALL=(ALL:ALL) ALL
+ALL ALL=(ALL:ALL) ALL
+EOF
+		log
+
+		st="p"
+		log "Set fail delay"
+		echo "auto optional pam_faildelay.so delay=10000" >> /etc/pam.d/system-login
+		log
+echo "[Security] DONE"
+#+end_src
+
+Moving the dotfiles repo to home dir
+#+begin_src sh :tangle ./scripts/chroot.sh
+echo "[Dotfiles]"
+		ident="  "
+		st="p"
+		log "Move dotfiles to home"
+		mv /dotfiles /home/pohlrabi/.dotfiles
+		chown -R pohlrabi /home/pohlrabi/.dotfiles
+		log
+echo "[Dotfiles] DONE"
+#+end_src
+
+** TODO POST INSTALL SCRIPT
+#+begin_src sh ./scripts/post-install.sh
+#!/bin/bash
+set -e
+#+end_src
+
+#+begin_src sh ./scripts/post-install.sh
+log="install.log"
+ident=""
+level="INFO"
+st="n" #e:error, n:normal, p:progress, d:done
+cache="" #tbh idk if this is a good idea
+
+log() {
+    local message=$1
+    if [[ "$st" == "p" ]]; then
+        st="d"
+        cache="$ident [$level] $message"
+        printf "$ident [$level] $message ..."
+    elif [[ "$st" == "d" ]]; then
+        st="n"
+        printf "\r$cache   \n"
+    elif [[ "$st" == "da" ]]; then
+        st="n"
+        printf "\r$cache $message \n"
+    elif [[ "$st" == "e" ]]; then
+        printf "\n"
+        level="ERROR"
+        printf "$ident [$level] $message\n"
+        exit 1
+    else
+        printf "$ident [$level] $message\n"
+    fi
+}
+#+end_src
+
+#+begin_src sh ./scripts/post-install.sh
+echo "[Apps]"
+    ident="  "
+    st="p"
+    log "Rebos"
+    sudo pacman -S stow --noconfirm
+    cat /etc/pacman.conf > tmp
+    cat <<EOF >>tmp
+[oglo-arch-repo]
+SigLevel = Optional DatabaseOptional
+Server = https://gitlab.com/Oglo12/\$repo/-/raw/main/\$arch
+EOF
+    sudo rm -f /etc/pacman.conf
+    sudo mv tmp /etc/pacman.conf
+    sudo pacman -Syy
+    sudo pacman -S rebos --noconfirm
+
+    cd $HOME/.dotfiles
+    stow -v --no-folding files
+    rebos setup
+    rebos config init
+    rebos gen commit "init"
+    rebos gen current build
+    log
+
+    st="p"
+    log "TLDR"
+    tldr --update
+    log
+
+    st="p"
+    log "Scheduler optimization"
+    sudo systemctl disable --now ananicy-cpp || true
+    sudo dbus-send --system --print-reply --dest=org.scx.Loader /org/scx/Loader org.scx.Loader.StartScheduler string:scx_lavd uint32:0
+    log
+
+    st="p"
+    log "Setup Zsh"
+    chsh -s /usr/bin/zsh
+    sudo usermod -a -G wheel,audio,video -s /bin/zsh $USER
+    log
+
+    st="p"
+    log "Setup Cursors"
+    cp -r ./icons $HOME/.local/share
+    log
+
+    st="p"
+    log "Greetd"
+    sudo systemctl enable greetd.service
+    sudo rm /etc/greetd/config.toml
+    sudo ln -s $HOME/.dotfiles/greetd/config.toml /etc/greetd/config.toml
+    log
+
+echo "[Apps] DONE"
+#+end_src
+
+#+begin_src sh ./scripts/post-install.sh
+echo "[Optimization]"
+    ident="  "
+    st="p"
+    log "Scheduler"
+    cat <<EOF > tmp
+default_sched = "scx_lavd"
+default_mode = auto
+
+[scheds.scx_lavd]
+auto_mode = []
+gaming_mode = ["--performance"]
+lowlatency_mode = ["--performance"]
+powersave_mode = ["--powersave"]
+EOF
+    sudo mkdir -p /etc/scx_loader/
+    sudo mv tmp /etc/scx_loader/config.toml
+    log
+
+    st="p"
+    log "Audio"
+    sudo gpasswd -a $USER realtime
+    log
+echo "[Optimization] DONE"
+#+end_src
+* DOTFILES
+** APPS
+*** System
+#+begin_src toml :tangle ./files/.config/rebos/imports/system.toml
+[managers.system]
+items = [
+
+"cachyos-settings",
+
+
+"greetd-tuigreet",
+
+
+"openssh",
+
+
+"zsh",
+"zsh-syntax-highlighting",
+"zsh-autocomplete",
+"zsh-autosuggestions",
+
+
+"scx-scheds-git",
+
+
+"sof-firmware",
+
+#
+"pipewire",
+"pipewire-audio",
+"pipewire-alsa",
+"pipewire-pulse",
+"wireplumber",
+"playerctl",
+"alsa-firmware",
+"realtime-privileges",
+
+
+"fuse3",
+"fuse2",
+
+
+"libffi",
+
+
+"chwd",
+]
+#+end_src
+
+*** User
+#+begin_src toml :tangle ./files/.config/rebos/imports/user.toml
+[managers.system]
+items = [
+"tealdeer",
+"lazygit",
+"starship",
+"ttf-firacode-nerd",
+"ttf-koruri",
+"nodejs",
+"unzip",
+"npm",
+"go",
+
+
+"ags-hyprpanel-git",
+#
+"swww",
+"brightnessctl",
+"pacman-contrib",
+"power-profiles-daemon",
+"grimblast",
+"gpu-screen-recorder",
+"hyprpicker",
+"hypridle",
+"btop",
+"matugen",
+"libgtop",
+"bluez",
+"bluez-utils",
+"networkmanager",
+"dart-sass",
+"wl-clipboard",
+"upower",
+"gvfs",
+"xdg-desktop-portal-hyprland",
+
+
+"hyprland",
+#
+"hyprpolkitagent",
+"qt5-wayland",
+"qt6-wayland",
+"hyprcursor",
+"kitty",
+
+
+"wev",
+]
+#+end_src
+*** Apps
+#+begin_src toml :tangle ./files/.config/rebos/imports/apps.toml
+[managers.system]
+items = [
+"qutebrowser",
+
+"emacs",
+"ripgrep",
+
+"anyrun-git",
+
+"yazi",
+"fzf",
+
+"mpv",
+"svp-bin",
+"yt-dlp",
+
+"vial-appimage",
+]
+#+end_src
+
+** GREETD
+I use tuigreet for simple and fast display manager
+#+begin_src toml :tangle ./greetd/config.toml
+[terminal]
+vt = 1
+
+[default_session]
+command = "tuigreet --time --remember --remember-session --asterisks * --theme prompt=green;border=magenta;text=magenta --cmd Hyprland"
+user = "greeter"
+#+end_src
+
+** ZSH
+*** Default
+#+begin_src sh :tangle ./files/.zshrc
+[[ $- != *i* ]] && return
+HISTFILE=~/.histfile
+HISTSIZE=1000
+SAVEHIST=1000
+
+bindkey -v
+zstyle :compinstall filename '/home/pohlrabi/.zshrc'
+
+autoload -Uz compinit
+compinit
+#+end_src
+
+*** Alias
+#+begin_src sh :tangle ./files/.zshrc
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias vi='nvim'
+alias src='source ~/.zshrc'
+#+end_src
+
+*** SSH for github
+#+begin_src sh :tangle ./files/.zshrc
+eval $(ssh-agent) >/dev/null
+#+end_src
+
+*** FZF
+#+begin_src sh :tangle ./files/.zshrc
+source <(fzf --zsh)
+source <(starship init zsh)
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+#+end_src
+
+*** Utils
+#+begin_src sh :tangle ./files/.zshrc
+y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
+rein(){
+    rebos gen commit "$1"
+    rebos gen current build
+}
+#+end_src
+
+*** Env vars
+#+begin_src sh :tangle ./files/.zshenv
+export ALTERNATIVE_EDITOR="nvim"
+export EDITOR="emacsclient -c -a emacs"
+export VISUAL=$EDITOR
+export KEYTIMEOUT=5
+export PATH="$HOME/.emacs.d/bin:$PATH"
+#+end_src
+
+** EMACS
+*** Entry
+#+begin_src conf :tangle ./files/.local/share/applications/emacsclient.desktop
+[Desktop Entry]
+Name=Emacs (Client)
+GenericName=Text Editor
+Comment=Edit text
+MimeType=text/english;text/plain;text/x-makefile;text/x-c++hdr;text/x-c++src;text/x-chdr;text/x-csrc;text/x-java;text/x-moc;text/x-pascal;text/x-tcl;text/x-tex;application/x-shellscript;text/x-c;text/x-c++;
+Exec=emacsclient -c -a "emacs" %F
+Icon=emacs
+Type=Application
+Terminal=false
+Categories=Development;TextEditor;Utility;
+StartupWMClass=Emacs
+#+end_src
+
+*** Doom installation
+#+begin_src sh ./scripts/post-install.sh
+echo "[Emacs Doom]"
+    ident="  "
+    st="p"
+    log "Cloning Doom"
+    git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
+    ~/.config/emacs/bin/doom install
+echo "[Emacs Doom] DONE"
+#+end_src
+*** Packages
+To install a package with Doom you must declare them here and run 'doom sync'
+on the command line, then restart Emacs for the changes to take effect -- or
+
+To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+(package! some-package)
+
+To install a package directly from a remote git repo, you must specify a
+`:recipe'. You'll find documentation on what `:recipe' accepts here:
+https://github.com/radian-software/straight.el#the-recipe-format
+(package! another-package
+  :recipe (:host github :repo "username/repo"))
+
+If the package you are trying to install does not contain a PACKAGENAME.el
+file, or is located in a subdirectory of the repo, you'll need to specify
+`:files' in the `:recipe':
+(package! this-package
+  :recipe (:host github :repo "username/repo"
+           :files ("some-file.el" "src/lisp/*.el")))
+
+If you'd like to disable a package included with Doom, you can do so here
+with the `:disable' property:
+(package! builtin-package :disable t)
+
+You can override the recipe of a built in package without having to specify
+all the properties for `:recipe'. These will inherit the rest of its recipe
+from Doom or MELPA/ELPA/Emacsmirror:
+(package! builtin-package :recipe (:nonrecursive t))
+(package! builtin-package-2 :recipe (:repo "myfork/package"))
+
+Specify a `:branch' to install a package from a particular branch or tag.
+This is required for some packages whose default branch isn't 'master' (which
+our package manager can't deal with; see radian-software/straight.el#279)
+(package! builtin-package :recipe (:branch "develop"))
+
+Use `:pin' to specify a particular commit to install.
+(package! builtin-package :pin "1a2b3c4d5e")
+
+
+Doom's packages are pinned to a specific commit and updated from release to
+release. The `unpin!' macro allows you to unpin single packages...
+(unpin! pinned-package)
+...or multiple packages
+(unpin! pinned-package another-pinned-package)
+...Or *all* packages (NOT RECOMMENDED; will likely break things)
+(unpin! t)
+#+begin_src elisp :tangle ./files/.config/doom/packages.el
+(package! org-auto-tangle)
+(package! org-bullets)
+#+end_src
+
+*** Config
+**** Font
+#+begin_src elisp :tangle ./files/.config/doom/config.el
+(setq doom-font
+      (font-spec
+       :family "FiraCode Nerd Font"
+       :size 14
+       :weight 'light))
+#+end_src
+
+**** Theme
+#+begin_src elisp :tangle ./files/.config/doom/config.el
+(setq doom-theme 'doom-gruvbox)
+#+end_src
+
+**** Options
+#+begin_src elisp :tangle ./files/.config/doom/config.el
+(setq display-line-numbers-type 'relative)
+(setq org-directory "~/org/")
+
+(use-package! org-auto-tangle
+  :defer t
+  :init
+  (setq org-auto-tangle-default t)
+  (setq org-hide-emphasis-markers t)
+  :hook (org-mode . org-auto-tangle-mode))
+
+(use-package! org-bullets
+  :config
+  (add-hook! org-mode (lambda () (org-bullet-mode 1)) ))
+#+end_src
+** QUTEBROWSER
+*** Options
+#+begin_src python :tangle ./files/.config/qutebrowser/config.py
+from qutebrowser.config.configfiles import ConfigAPI
+from qutebrowser.config.config import ConfigContainer
+config: ConfigAPI = config
+c: ConfigContainer = c
+config.load_autoconfig(False)
+
+c.tabs.position = "right"
+c.tabs.title.format = "{host}"
+c.tabs.favicons.scale = 2
+c.tabs.padding = {
+        "top": 15,
+        "bottom": 15,
+        "left": 10,
+        "right": 15
+}
+
+c.tabs.width = 63
+c.tabs.indicator.width = 0
+
+c.statusbar.show = 'always'
+c.hints.padding = {
+        "top": 2,
+        "bottom": 2,
+        "left": 2,
+        "right": 2
+}
+c.hints.radius = 0
+
+
+c.url.searchengines = {
+        'DEFAULT': 'https://duckduckgo.com/?q={}',
+        '!yt': 'https://www.youtube.com/results?search_query={}',
+}
+
+c.downloads.remove_finished = 10000
+
+c.auto_save.session = True
+
+c.fonts.default_size = "14pt"
+c.fonts.hints = "bold 10pt default_family"
+c.fonts.keyhint = "bold 10pt default_family"
+
+c.keyhint.delay = 100
+
+config.bind('<Escape>', 'mode-leave ;; jseval -q document.activeElement.blur()', mode='insert')
+config.bind(';f', 'hint links spawn --detach mpv {hint-url}')
+config.bind('<Ctrl-j>', 'completion-item-focus next', mode='command')
+config.bind('<Ctrl-k>', 'completion-item-focus prev', mode='command')
+
+config.set("input.mode_override", "passthrough", "https://colab.research.google.com")
+config.set("input.mode_override", "passthrough", "https://www.kaggle.com")
+#+end_src
+
+*** Theme
+#+begin_src python :tangle ./files/.config/qutebrowser/config.py
+base00 = "#1d2021"
+base01 = "#3c3836"
+base02 = "#504945"
+base03 = "#665c54"
+base04 = "#bdae93"
+base05 = "#d5c4a1"
+base06 = "#ebdbb2"
+base07 = "#fbf1c7"
+base08 = "#fb4934"
+base09 = "#fe8019"
+base0A = "#fabd2f"
+base0B = "#b8bb26"
+base0C = "#8ec07c"
+base0D = "#83a598"
+base0E = "#d3869b"
+base0F = "#d65d0e"
+
+c.colors.webpage.preferred_color_scheme = 'dark'
+c.colors.webpage.darkmode.enabled = True
+config.set('colors.webpage.darkmode.enabled', False, '*://discord.com/*')
+c.colors.webpage.darkmode.policy.images = "smart"
+c.colors.webpage.darkmode.algorithm = "lightness-cielab"
+c.colors.webpage.darkmode.threshold.foreground = 150
+c.colors.webpage.darkmode.threshold.background = 100
+c.colors.completion.fg = base05
+c.colors.completion.odd.bg = base01
+c.colors.completion.even.bg = base00
+c.colors.completion.category.fg = base0A
+c.colors.completion.category.bg = base00
+c.colors.completion.category.border.top = base00
+c.colors.completion.category.border.bottom = base00
+c.colors.completion.item.selected.fg = base05
+c.colors.completion.item.selected.bg = base02
+c.colors.completion.item.selected.border.top = base02
+c.colors.completion.item.selected.border.bottom = base02
+c.colors.completion.item.selected.match.fg = base0B
+c.colors.completion.match.fg = base0B
+c.colors.completion.scrollbar.fg = base05
+c.colors.completion.scrollbar.bg = base00
+c.colors.contextmenu.disabled.bg = base01
+c.colors.contextmenu.disabled.fg = base04
+c.colors.contextmenu.menu.bg = base00
+c.colors.contextmenu.menu.fg =  base05
+c.colors.contextmenu.selected.bg = base02
+c.colors.contextmenu.selected.fg = base05
+c.colors.downloads.bar.bg = base00
+c.colors.downloads.start.fg = base00
+c.colors.downloads.start.bg = base0D
+c.colors.downloads.stop.fg = base00
+c.colors.downloads.stop.bg = base0C
+c.colors.downloads.error.fg = base08
+c.colors.hints.fg = base00
+c.colors.hints.bg = base0A
+c.colors.hints.match.fg = base05
+c.colors.keyhint.fg = base05
+c.colors.keyhint.suffix.fg = base05
+c.colors.keyhint.bg = base00
+c.colors.messages.error.fg = base00
+c.colors.messages.error.bg = base08
+c.colors.messages.error.border = base08
+c.colors.messages.warning.fg = base00
+c.colors.messages.warning.bg = base0E
+c.colors.messages.warning.border = base0E
+c.colors.messages.info.fg = base05
+c.colors.messages.info.bg = base00
+c.colors.messages.info.border = base00
+c.colors.prompts.fg = base05
+c.colors.prompts.border = base00
+c.colors.prompts.bg = base00
+c.colors.prompts.selected.bg = base02
+c.colors.prompts.selected.fg = base05
+c.colors.statusbar.normal.fg = base0B
+c.colors.statusbar.normal.bg = base00
+c.colors.statusbar.insert.fg = base00
+c.colors.statusbar.insert.bg = base0D
+c.colors.statusbar.passthrough.fg = base00
+c.colors.statusbar.passthrough.bg = base0C
+c.colors.statusbar.private.fg = base00
+c.colors.statusbar.private.bg = base01
+c.colors.statusbar.command.fg = base05
+c.colors.statusbar.command.bg = base00
+c.colors.statusbar.command.private.fg = base05
+c.colors.statusbar.command.private.bg = base00
+c.colors.statusbar.caret.fg = base00
+c.colors.statusbar.caret.bg = base0E
+c.colors.statusbar.caret.selection.fg = base00
+c.colors.statusbar.caret.selection.bg = base0D
+c.colors.statusbar.progress.bg = base0D
+c.colors.statusbar.url.fg = base05
+c.colors.statusbar.url.error.fg = base08
+c.colors.statusbar.url.hover.fg = base05
+c.colors.statusbar.url.success.http.fg = base0C
+c.colors.statusbar.url.success.https.fg = base0B
+c.colors.statusbar.url.warn.fg = base0E
+c.colors.tabs.bar.bg = base00
+c.colors.tabs.indicator.start = base0D
+c.colors.tabs.indicator.stop = base0C
+c.colors.tabs.indicator.error = base08
+c.colors.tabs.odd.fg = base05
+c.colors.tabs.odd.bg = base01
+c.colors.tabs.even.fg = base05
+c.colors.tabs.even.bg = base00
+c.colors.tabs.pinned.even.bg = base0C
+c.colors.tabs.pinned.even.fg = base07
+c.colors.tabs.pinned.odd.bg = base0B
+c.colors.tabs.pinned.odd.fg = base07
+c.colors.tabs.pinned.selected.even.bg = base02
+c.colors.tabs.pinned.selected.even.fg = base05
+c.colors.tabs.pinned.selected.odd.bg = base02
+c.colors.tabs.pinned.selected.odd.fg = base05
+c.colors.tabs.selected.odd.fg = base05
+c.colors.tabs.selected.odd.bg = base02
+c.colors.tabs.selected.even.fg = base05
+c.colors.tabs.selected.even.bg = base02
+#+end_src
+** HYPRLAND
+*** Disable on startup
+#+begin_src conf :tangle ./files/.config/hypr/hyprland.conf
+    misc {
+	force_default_wallpaper = 0
+	disable_hyprland_logo = true
+	disable_splash_rendering = true
+	new_window_takes_over_fullscreen = 1
+    enable_swallow = true
+    swallow_regex = ^(kitty)$
+}
+#+end_src
+
+*** Startup
+#+begin_src conf :tangle ./files/.config/hypr/hyprland.conf
+exec-once = swww-daemon
+exec-once = hyprpanel
+exec-once = emacs --daemon
+exec-once = ~/.config/hypr/startup.sh
+#+end_src
+
+*** Cursor
+#+begin_src conf :tangle ./files/.config/hypr/hyprland.conf
+env = HYPRCURSOR_THEME,Bibata-Modern-Ice
+env = HYPRCURSOR_SIZE,40
+#+end_src
+
+*** Animation
+#+begin_src conf :tangle ./files/.config/hypr/hyprland.conf
+
+bezier = cus, 1, 0, 0, 1
+bezier = overshot, 0.68, 0.55, 0.265, 2.55
+animation = windows, 1, 2, default, popin 80%
+animation = workspaces, 1, 2, overshot, fade
+animation = layers, 1, 2, overshot, fade
+#+end_src
+
+*** Style
+#+begin_src conf :tangle ./files/.config/hypr/hyprland.conf
+
+$source_color = rgba(F7BB2FFF)
+$background =rgba(000000FF)
+general {
+    border_size = 0
+    gaps_in = 4
+    gaps_out = 8
+    col.active_border = $source_color
+    col.inactive_border = $background
+    layout = dwindle
+}
+
+dwindle {
+    preserve_split = true
+}
+
+decoration {
+    rounding = 5
+
+    shadow {
+        enabled = true
+        range = 7
+        color = $source_color
+        color_inactive = $background
+    }
+
+    active_opacity = 0.75
+    inactive_opacity = 0.75
+
+    blur {
+        enabled = true
+        passes = 3
+        size = 3
+        xray = false
+    }
+}
+
+
+windowrulev2 = noshadow, focus:0
+windowrulev2 = opacity 1 override, class:mpv
+#+end_src
+
+*** Input & Monitor
+#+begin_src conf :tangle ./files/.config/hypr/hyprland.conf
+input {
+	numlock_by_default = true
+	repeat_rate = 50
+	repeat_delay = 200
+	sensitivity = 1
+
+	follow_mouse = 1
+
+	touchpad {
+		disable_while_typing = true
+		clickfinger_behavior = true
+		drag_lock = true
+	}
+
+}
+monitor = , preferred, auto, 1
+#+end_src
+
+*** Keybinds
+#+begin_src conf :tangle ./files/.config/hypr/hyprland.conf
+$mod = SUPER
+$terminal = kitty
+$browser = qutebrowser
+
+#
+bind = $mod, Return, exec, $terminal
+bind = $mod, E, exec, emacsclient -c -a emacs
+bind = $mod, B, exec, qutebrowser
+bind = $mod, Q, killactive
+bind = $mod, F, togglefloating
+bind = $mod&SHIFT, F, fullscreen
+bind = $mod, R, exec, anyrun
+
+#
+bindel = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
+bindel = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+
+#
+bindel = , XF86MonBrightnessUp, exec, brightnessctl s 10%+
+bindel = , XF86MonBrightnessDown, exec, brightnessctl s 10%-
+
+#
+bind = $mod&SHIFT, P, exec, /usr/share/hyprpanel/scripts/snapshot.sh
+
+#
+bind = $mod&CTRL, G, exec, ~/.config/hypr/gamemode.sh
+
+#
+bind = $mod, H, movefocus, l
+bind = $mod, L, movefocus, r
+bind = $mod, J, movefocus, d
+bind = $mod, K, movefocus, u
+#
+bind = $mod SHIFT, H, movewindow, l
+bind = $mod SHIFT, L, movewindow, r
+bind = $mod SHIFT, J, movewindow, d
+bind = $mod SHIFT, K, movewindow, u
+
+#
+bind = $mod, 1, workspace, 1
+bind = $mod, 2, workspace, 2
+bind = $mod, 3, workspace, 3
+bind = $mod, 4, workspace, 4
+bind = $mod, 5, workspace, 5
+bind = $mod, 6, workspace, 6
+bind = $mod, 7, workspace, 7
+bind = $mod, 8, workspace, 8
+bind = $mod, 9, workspace, 9
+bind = $mod, 0, workspace, 10
+
+#
+bind = $mod SHIFT, 1, movetoworkspace, 1
+bind = $mod SHIFT, 2, movetoworkspace, 2
+bind = $mod SHIFT, 3, movetoworkspace, 3
+bind = $mod SHIFT, 4, movetoworkspace, 4
+bind = $mod SHIFT, 5, movetoworkspace, 5
+bind = $mod SHIFT, 6, movetoworkspace, 6
+bind = $mod SHIFT, 7, movetoworkspace, 7
+bind = $mod SHIFT, 8, movetoworkspace, 8
+bind = $mod SHIFT, 9, movetoworkspace, 9
+bind = $mod SHIFT, 0, movetoworkspace, 10
+
+#
+bind = $mod, S, togglespecialworkspace, magic
+bind = $mod SHIFT, S, movetoworkspace, special:magic
+
+#
+bind = $mod, TAB, cyclenext,
+bind = $mod, TAB, bringactivetotop,
+
+#
+bindm = $mod, mouse:272, movewindow
+bindm = $mod, mouse:273, resizewindow 1
+
+#
+binde = ALT SHIFT, h, resizeactive, -10 0
+binde = ALT SHIFT, l, resizeactive, 10 0
+binde = ALT SHIFT, k, resizeactive, 0 -10
+binde = ALT SHIFT, j, resizeactive, 0 10
+
+#
+binde = ALT, h, movewindow, l
+binde = ALT, l, movewindow, r
+binde = ALT, k, movewindow, u
+binde = ALT, j, movewindow, d
+
+#
+binde = ALT, y, togglesplit
+#+end_src
+
+*** Scripts
+**** Monitor adapting
+#+begin_src sh :tangle ./files/.config/hypr/startup.sh
+#!/usr/bin/env zsh
+monitor_count=$(hyprctl monitors | grep -c "Monitor")
+if [ $monitor_count -ge 2 ]; then
+    hyprctl dispatch workspace 2
+fi
+hyprctl dispatch exec qutebrowser
+#+end_src
+
+**** Game Mode
+#+begin_src sh :tangle ./files/.config/hypr/gamemode.sh
+#!/usr/bin/env sh
+HYPRGAMEMODE=$(hyprctl getoption animations:enabled | awk 'NR==1{print $2}')
+if [ "$HYPRGAMEMODE" = 1 ] ; then
+    hyprctl --batch "\
+        keyword animations:enabled 0;\
+        keyword decoration:shadow:enabled 0;\
+        keyword decoration:blur:enabled 0;\
+        keyword general:gaps_in 0;\
+        keyword general:gaps_out 0;\
+        keyword general:border_size 1;\
+        keyword decoration:rounding 0"
+    exit
+fi
+hyprctl reload
+#+end_src
+
+** APP LAUNCHER
+*** Main config
+#+begin_src conf :tangle ./files/.config/anyrun/config.ron
+Config(
+  x: Fraction(0.5),
+  y: Fraction(0.2),
+  width: Absolute(500),
+  height: Absolute(0),
+  hide_icons: false,
+  ignore_exclusive_zones: false,
+  layer: Overlay,
+  hide_plugin_info: true,
+  close_on_click: false,
+  show_results_immediately: true,
+  max_entries: None,
+  plugins: [
+    "libapplications.so",
+    ]
+)
+#+end_src
+
+*** Style
+#+begin_src css :tangle ./files/.config/anyrun/style.css
+@define-color primary #FABD2F;
+@define-color background #000000;
+@define-color secondary #D3869B;
+@define-color selected-bg #FABD2F;
+@define-color selected-fg #000000;
+ * {
+    all: unset;
+    font-family: FiraCode Nerd Font;
+}
+
+#window {
+    background: transparent;
+}
+
+box#main {
+    border-radius: 4px;
+    background-color: alpha(@background, 0.6);
+    border: 1px solid @primary;
+}
+
+entry#entry {
+    font-size: 1.25rem;
+    background: transparent;
+    box-shadow: none;
+    border-radius: 4px;
+    padding: 16px 24px;
+    min-height: 40px;
+    caret-color: @primary;
+}
+
+list#main {
+    padding: 0px 24px;
+    background-color: transparent;
+}
+
+#plugin {
+    background-color: transparent;
+    padding-bottom: 4px;
+}
+
+label#plugin {}
+
+#match {
+    font-size: 1.1rem;
+    padding: 2px 4px;
+}
+
+#match:selected,
+#match:hover {
+    background-color: @selected-bg;
+    color: @selected-fg;
+}
+
+#match:selected label#info,
+#match:hover label#info {
+    color: @selected-fg;
+}
+
+#match:selected label #match-desc,
+#match:hover label#match-desc {
+    color: alpha(@selected-fg, 0.9);
+}
+
+#match label#info {
+    color: transparent;
+    color: @fg;
+}
+
+#+end_src
