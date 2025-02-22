@@ -1,16 +1,4 @@
 [[ $- != *i* ]] && return
-
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-alias vi='nvim'
-alias src='source ~/.zshrc'
-
-rein(){
-    rebos gen commit "$1"
-    rebos gen current build
-}
-
-
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
@@ -21,9 +9,13 @@ zstyle :compinstall filename '/home/pohlrabi/.zshrc'
 autoload -Uz compinit
 compinit
 
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias vi='nvim'
+alias src='source ~/.zshrc'
+
 eval $(ssh-agent) >/dev/null
 
-# fzf integration
 source <(fzf --zsh)
 source <(starship init zsh)
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -36,4 +28,9 @@ y() {
 		builtin cd -- "$cwd"
 	fi
 	rm -f -- "$tmp"
+}
+
+rein(){
+    rebos gen commit "$1"
+    rebos gen current build
 }

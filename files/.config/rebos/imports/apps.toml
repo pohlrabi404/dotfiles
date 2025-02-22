@@ -1,26 +1,18 @@
 [managers.system]
 items = [
-	# browser
-	"qutebrowser",
+"qutebrowser",
 
-    # editor
-    "emacs",
-	"ripgrep",
+"emacs",
+"ripgrep",
 
-	"neovim",
+"anyrun-git",
 
-	# runner
-	"anyrun-git",
+"yazi",
+"fzf",
 
-	# file browser
-	"yazi",
-	"fzf",
+"mpv",
+"svp-bin",
+"yt-dlp",
 
-    # mpv
-    "mpv",
-    "svp-bin",
-    "yt-dlp",
-	
-	# vial
-	"vial-appimage",
+"vial-appimage",
 ]

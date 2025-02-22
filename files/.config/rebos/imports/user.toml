@@ -1,56 +1,47 @@
 [managers.system]
 items = [
-	# tldr / man page
-	"tealdeer",
+"tealdeer",
+"lazygit",
+"starship",
+"ttf-firacode-nerd",
+"ttf-koruri",
+"nodejs",
+"unzip",
+"npm",
+"go",
 
-	# git
-	"lazygit",
 
-	# zsh theme and plugins
-	"starship",
+"ags-hyprpanel-git",
+#
+"swww",
+"brightnessctl",
+"pacman-contrib",
+"power-profiles-daemon",
+"grimblast",
+"gpu-screen-recorder",
+"hyprpicker",
+"hypridle",
+"btop",
+"matugen",
+"libgtop",
+"bluez",
+"bluez-utils",
+"networkmanager",
+"dart-sass",
+"wl-clipboard",
+"upower",
+"gvfs",
+"xdg-desktop-portal-hyprland",
 
-	# font
-	"ttf-firacode-nerd",
-	"ttf-koruri",
 
-    # nodejs
-    "nodejs",
-    "unzip",
-    "npm",
-    "go",
+"hyprland",
+#
+"hyprpolkitagent",
+"qt5-wayland",
+"qt6-wayland",
+"hyprcursor",
+"kitty",
 
-    # theme
-    "ags-hyprpanel-git",
-    ## dependencies
-    "swww",
-	"brightnessctl",
-    "pacman-contrib",
-    "power-profiles-daemon",
-    "grimblast",
-    "gpu-screen-recorder",
-    "hyprpicker",
-    "hypridle",
-    "btop",
-    "matugen",
-    "libgtop",
-    "bluez",
-    "bluez-utils",
-    "networkmanager",
-    "dart-sass",
-	"wl-clipboard",
-    "upower",
-    "gvfs",
-    "xdg-desktop-portal-hyprland",
 
-	# wm
-	"hyprland",
-    ## dependencies
-	"hyprpolkitagent",
-	"qt5-wayland",
-	"qt6-wayland",
-	"hyprcursor",
-	"kitty",
-
-    # keycode
-    "wev",
+"wev",
 ]

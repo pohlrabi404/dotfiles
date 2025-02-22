@@ -1,43 +1,43 @@
 [managers.system]
 items = [
-    # linux
-    "cachyos-settings",
 
-    # display manager
-    "greetd-tuigreet",
+"cachyos-settings",
 
-	# ssh
-	"openssh",
 
-	# shell
-	"zsh",
-	"zsh-syntax-highlighting",
-	"zsh-autocomplete",
-	"zsh-autosuggestions",
+"greetd-tuigreet",
 
-	# kernel scheduler
-	"scx-scheds-git",
 
-	# system audio
-	"sof-firmware",
+"openssh",
 
-	## volume
-	"pipewire",
-    "pipewire-audio",
-    "pipewire-alsa",
-    "pipewire-pulse",
-	"wireplumber",
-	"playerctl",
-    "alsa-firmware",
-    "realtime-privileges",
 
-    # file system
-    "fuse3",
-    "fuse2",
+"zsh",
+"zsh-syntax-highlighting",
+"zsh-autocomplete",
+"zsh-autosuggestions",
 
-    # dependencies for wayland
-    "libffi",
 
-	# hardware detection
-	"chwd",
+"scx-scheds-git",
+
+
+"sof-firmware",
+
+#
+"pipewire",
+"pipewire-audio",
+"pipewire-alsa",
+"pipewire-pulse",
+"wireplumber",
+"playerctl",
+"alsa-firmware",
+"realtime-privileges",
+
+
+"fuse3",
+"fuse2",
+
+
+"libffi",
+
+
+"chwd",
 ]
