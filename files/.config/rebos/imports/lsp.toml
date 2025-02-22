@@ -1,0 +1,7 @@
+[managers.system]
+items = [
+"bash-language-server",
+
+"rustup",
+"rust-analyzer",
+]

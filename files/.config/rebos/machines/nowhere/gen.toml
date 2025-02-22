@@ -6,6 +6,7 @@ imports = [
 	"system",
 	"apps",
     "user",
+    "lsp",
 ]
 
 [managers.system]

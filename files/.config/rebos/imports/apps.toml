@@ -3,7 +3,7 @@ items = [
 "qutebrowser",
 
 "emacs",
-"ripgrep",
+"neovim",
 
 "anyrun-git",
 

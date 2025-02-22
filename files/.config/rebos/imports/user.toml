@@ -10,9 +10,12 @@ items = [
 "npm",
 "go",
 
+# emacs deps
+"ripgrep",
+"fd",
 
 "ags-hyprpanel-git",
-#
+# hyprpanel deps
 "swww",
 "brightnessctl",
 "pacman-contrib",
