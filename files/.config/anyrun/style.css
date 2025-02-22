@@ -3,8 +3,7 @@
 @define-color secondary #D3869B;
 @define-color selected-bg #FABD2F;
 @define-color selected-fg #000000;
-
-* {
+ * {
     all: unset;
     font-family: FiraCode Nerd Font;
 }
