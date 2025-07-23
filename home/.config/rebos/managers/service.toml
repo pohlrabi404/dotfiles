@@ -1,0 +1,19 @@
+# --------------------------- #
+#    Service Configuration    #
+# --------------------------- #
+
+add = "bash ~/.dots/service/add/#:?.sh" 
+remove = "bash ~/.dots/service/remove/#:?.sh"
+sync = "bash ~/.dots/service/sync/#:?.sh"
+upgrade = "bash ~/.dots/service/upgrade/#:?.sh"
+
+plural_name = "services"
+
+hook_name = "services" # This is used in hooks. (Example: post_system_packages_add)
+
+# ------------------------------- #
+#    Additional configuration.    #
+# ------------------------------- #
+
+[config]
+many_args = false

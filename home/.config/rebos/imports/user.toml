@@ -1,0 +1,9 @@
+[managers.system]
+items = [
+	"zsh",
+]
+
+[managers.service]
+items = [
+	"zsh-pohl",
+]
