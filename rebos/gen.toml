@@ -1,0 +1,17 @@
+# --------------------- #
+#    Generation File    #
+# --------------------- #
+
+# Other generation files to import. (Example: intensive_apps -> ~/.config/rebos/imports/intensive_apps.toml)
+imports = [
+    "system",
+]
+
+[managers.system]
+items = []
+
+[managers.flatpak]
+items = []
+
+[managers.cargo]
+items = []

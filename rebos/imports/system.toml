@@ -1,0 +1,7 @@
+[managers.system]
+items = [
+	"tldr",
+	"zsh",
+	"yazi",
+	"less",
+]

@@ -1,0 +1,19 @@
+# --------------------------- #
+#    Manager Configuration    #
+# --------------------------- #
+
+add = "paru -S --noconfirm #:?" 
+remove = "paru -Rns #:?"
+sync = "paru -Syu #:?"
+upgrade = "paru -U #:?"
+
+plural_name = "system packages"
+
+hook_name = "system_packages" # This is used in hooks. (Example: post_system_packages_add)
+
+# ------------------------------- #
+#    Additional configuration.    #
+# ------------------------------- #
+
+[config]
+many_args = true
