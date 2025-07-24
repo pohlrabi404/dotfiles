@@ -1,6 +1,11 @@
 [managers.system]
 items = [
+	# shell
 	"zsh",
+
+	# git things
+	"git",
+	"openssh",
 ]
 
 [managers.service]

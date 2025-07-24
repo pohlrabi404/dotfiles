@@ -1,9 +1,12 @@
 [managers.system]
 items = [
+	# utility
 	"tldr",
-	"yazi",
 	"less",
 	"stow",
+
+	# file navigation
+	"yazi",
 	"fzf",
 	"fd",
 
