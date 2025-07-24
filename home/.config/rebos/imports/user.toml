@@ -6,6 +6,9 @@ items = [
 	# git things
 	"git",
 	"openssh",
+
+	# entertainment
+	"mpv",
 ]
 
 [managers.service]
