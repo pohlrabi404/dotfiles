@@ -316,13 +316,13 @@ c.colors.tabs.indicator.error = bright_red
 c.colors.tabs.odd.fg = fg2
 
 # Background color of unselected odd tabs.
-c.colors.tabs.odd.bg = bg2
+c.colors.tabs.odd.bg = bg1
 
 # Foreground color of unselected even tabs.
 c.colors.tabs.even.fg = c.colors.tabs.odd.fg
 
 # Background color of unselected even tabs.
-c.colors.tabs.even.bg = bg3
+c.colors.tabs.even.bg = bg1
 
 # Foreground color of selected odd tabs.
 c.colors.tabs.selected.odd.fg = fg2

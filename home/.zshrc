@@ -12,3 +12,5 @@ function redit() {
 	CONFIG_DIR="~/.config/rebos/imports/"
 	nvim $CONFIG_DIR
 }
+
+eval "$(starship init zsh)"

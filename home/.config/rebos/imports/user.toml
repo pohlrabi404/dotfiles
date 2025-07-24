@@ -2,6 +2,7 @@
 items = [
 	# shell
 	"zsh",
+	"starship",
 
 	# git things
 	"git",
