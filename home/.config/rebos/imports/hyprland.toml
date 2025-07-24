@@ -1,4 +1,13 @@
 [managers.system]
 items = [
 	"hyprland",
+	"kitty",
+
+	## font
+	"ttf-iosevka-nerd",
+	"noto-fonts-cjk",
+	"noto-fonts-emoji",
+
+	## browser
+	"qutebrowser",
 ]

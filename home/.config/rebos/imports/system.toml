@@ -4,4 +4,20 @@ items = [
 	"yazi",
 	"less",
 	"stow",
+	"fzf",
+	"fd",
+
+	# build system
+	"base-devel",
+
+	# watch keys code
+	"wev",
+
+	# sounds
+	"sof-firmware",
+	"pipewire",
+	"pipewire-audio",
+	"pipewire-alsa",
+	"pipewire-pulse",
+	"pipemixer-git",
 ]
