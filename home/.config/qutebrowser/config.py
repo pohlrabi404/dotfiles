@@ -29,6 +29,9 @@ c.tabs.padding = {
 
 c.tabs.title.alignment = "center"
 
+## Url
+c.statusbar.widgets = ["keypress", "search_match", "url", "progress", "clock:[%m/%d %H:%M:%S] "]
+
 ## Fonts
 c.fonts.default_family = "Iosevka Nerd Font Mono"
 # gruvbox dark hard qutebrowser theme by Florian Bruhin <me@the-compiler.org>
