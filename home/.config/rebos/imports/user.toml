@@ -10,6 +10,8 @@ items = [
 
 	# entertainment
 	"mpv",
+	"yt-dlp",
+	"socat",
 ]
 
 [managers.service]
