@@ -9,6 +9,7 @@ items = [
 	"yazi",
 	"fzf",
 	"fd",
+	"inotify-tools",
 
 	# build system
 	"base-devel",

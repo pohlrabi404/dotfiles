@@ -20,4 +20,5 @@ items = [
 [managers.service]
 items = [
 	"zsh-pohl",
+	"stow-service",
 ]

@@ -1,0 +1,12 @@
+[Unit]
+Description=Recursive watch & stow for ~/.dots
+
+[Service]
+Type=simple
+ExecStartPre=%h/.local/bin/stow-home-sync.sh
+ExecStart=/bin/sh -c 'exec /usr/bin/inotifywait -mrq -e create,delete,modify,move --format "%w%f" %h/.dots/home | while read path; do %h/.local/bin/stow-home-sync.sh; done'
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

@@ -32,5 +32,5 @@ require("lazy").setup({
   },
 })
 
-require("settings")
+require("settings/general")
 require("autocmds/auto-ssh")
