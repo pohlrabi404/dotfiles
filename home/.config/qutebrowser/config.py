@@ -6,8 +6,7 @@ c: ConfigContainer = c  # noqa: F821 pylint: disable=E0602,C0103
 
 ## Imports
 config.source('theme.py')
-## Disable autoconfig
-config.load_autoconfig(False)
+config.load_autoconfig(True)
 
 ## Control
 config.bind("<Ctrl-j>", "completion-item-focus next", mode="command")
