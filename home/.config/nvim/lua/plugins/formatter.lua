@@ -4,7 +4,7 @@ return {
 	ft = { "lua" },
 	opts = {
 	    formatters_by_ft = {
-		lua = {},
+		lua = { "stylua" },
 	    },
 	    format_on_save = {
 		timeout_ms = 500,

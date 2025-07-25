@@ -1,0 +1,9 @@
+[[mgr.prepend_keymap]]
+on = [ "g", "c" ]
+run = "cd ~/.dots/home/.config"
+desc = "Cd to .config"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "h" ]
+run = "cd ~/.dots"
+desc = "Cd to dotfiles"

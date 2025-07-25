@@ -1,4 +1,4 @@
 return {
-    "NeogitOrg/neogit",
-    "nvim-lua/plenary.nvim",
+	{ "NeogitOrg/neogit", event = "VeryLazy" },
+	"nvim-lua/plenary.nvim",
 }
