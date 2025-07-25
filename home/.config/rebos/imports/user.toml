@@ -4,6 +4,9 @@ items = [
 	"zsh",
 	"starship",
 
+	# my beloved
+	"neovim-nightly",
+
 	# git things
 	"git",
 	"openssh",
