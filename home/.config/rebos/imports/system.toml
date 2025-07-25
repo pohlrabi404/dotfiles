@@ -24,4 +24,8 @@ items = [
 	"pipewire-alsa",
 	"pipewire-pulse",
 	"pipemixer-git",
+
+	# usb
+	"udisks2",
+	"bashmount",
 ]
