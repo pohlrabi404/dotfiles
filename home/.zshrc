@@ -2,6 +2,7 @@
 alias ls='ls --color=auto'
 alias lls='ls -la --color=auto'
 alias grep='grep --color=auto'
+alias bm='bashmount'
 
 function rein() {
 	rebos gen commit "$1"
