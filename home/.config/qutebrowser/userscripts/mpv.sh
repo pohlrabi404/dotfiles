@@ -8,7 +8,7 @@ SOCKET="${XDG_RUNTIME_DIR:-/tmp}/mpv-socket"
 
 # ------------------------------------------------------------------ functions
 start_mpv() {
-    exec mpv --idle --input-ipc-server="$SOCKET" "$QUTE_URL"
+    exec mpv --input-ipc-server="$SOCKET" "$QUTE_URL"
 }
 
 send_to_playlist() {
