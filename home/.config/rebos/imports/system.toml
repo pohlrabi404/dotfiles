@@ -4,6 +4,7 @@ items = [
 	"tldr",
 	"less",
 	"stow",
+	"cachyos-settings",
 
 	# file navigation
 	"yazi",
@@ -24,6 +25,9 @@ items = [
 	"pipewire-alsa",
 	"pipewire-pulse",
 	"pipemixer-git",
+
+	# brightness
+	"brightnessctl",
 
 	# usb
 	"udisks2",
