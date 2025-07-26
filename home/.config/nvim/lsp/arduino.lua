@@ -1,4 +1,18 @@
 local bin = vim.fn.stdpath("data") .. "/mason/bin"
+local fqbn = "m5stack:esp32:m5stack_atom" -- fallback
+local root = vim.uv.cwd() or vim.fn.getcwd()
+local yaml = root .. "/sketch.yaml"
+local f = io.open(yaml, "r")
+if f then
+	for line in f:lines() do
+		local k, v = line:match("^%s*([%w_]+)%s*:%s*(.+)$")
+		if k == "default_fqbn" then
+			fqbn = v:match('^"?([^"]+)"?$') or v
+			break
+		end
+	end
+	f:close()
+end
 return {
 	capabilities = {
 		textDocument = {
@@ -19,6 +33,9 @@ return {
 
 		"-clangd",
 		bin .. "/clangd",
+
+		"-fqbn",
+		fqbn,
 	},
 	filetypes = { "arduino" },
 	root_markers = { "sketch.yaml" },
