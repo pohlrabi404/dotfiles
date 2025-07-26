@@ -1,4 +1,4 @@
-return {
+vim.lsp.config("lua", {
 	capabilities = {
 		textDocument = {
 			semanticTokens = {
@@ -16,4 +16,5 @@ return {
 			},
 		},
 	},
-}
+})
+vim.lsp.enable("lua")

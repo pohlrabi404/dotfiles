@@ -13,7 +13,7 @@ if f then
 	end
 	f:close()
 end
-return {
+vim.lsp.config("arduino", {
 	capabilities = {
 		textDocument = {
 			semanticTokens = vim.NIL,
@@ -40,4 +40,5 @@ return {
 	filetypes = { "arduino" },
 	root_markers = { "sketch.yaml" },
 	settings = {},
-}
+})
+vim.lsp.enable("arduino")

@@ -15,7 +15,7 @@ vim.diagnostic.config({ virtual_lines = { current_line = true } })
 -- 		},
 -- 	},
 -- })
-vim.lsp.enable({ "lua", "arduino" })
+-- vim.lsp.enable({ "lua", "arduino" })
 
 vim.cmd.colorscheme("gruber-darker")
 vim.g.mapleader = " "
