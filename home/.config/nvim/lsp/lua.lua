@@ -1,4 +1,11 @@
-vim.lsp.config["lua_ls"] = {
+return {
+	capabilities = {
+		textDocument = {
+			semanticTokens = {
+				multilineTokenSupport = true,
+			},
+		},
+	},
 	cmd = { "lua-language-server" },
 	filetypes = { "lua" },
 	root_markers = { ".luarc.json", ".git" },
@@ -10,4 +17,3 @@ vim.lsp.config["lua_ls"] = {
 		},
 	},
 }
-vim.lsp.enable("lua_ls")

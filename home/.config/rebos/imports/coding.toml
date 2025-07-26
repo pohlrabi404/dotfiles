@@ -1,0 +1,6 @@
+[managers.system]
+items = [
+    # arduino
+    "arduino-cli",
+    "7zip",
+]

@@ -6,15 +6,16 @@ vim.pack.add({
 })
 
 vim.diagnostic.config({ virtual_lines = { current_line = true } })
-vim.lsp.config("*", {
-	capabilities = {
-		textDocument = {
-			semanticTokens = {
-				multilineTokenSupport = true,
-			},
-		},
-	},
-})
+-- vim.lsp.config("*", {
+-- 	capabilities = {
+-- 		textDocument = {
+-- 			semanticTokens = {
+-- 				multilineTokenSupport = true,
+-- 			},
+-- 		},
+-- 	},
+-- })
+vim.lsp.enable({ "lua", "arduino" })
 
 vim.cmd.colorscheme("gruber-darker")
 vim.g.mapleader = " "
