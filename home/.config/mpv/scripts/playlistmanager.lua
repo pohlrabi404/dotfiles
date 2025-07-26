@@ -1,46 +1,46 @@
 local settings = {
-  --navigation keybindings force override only while playlist is visible
-  --if "no" then you can display the playlist by any of the navigation keys
-  dynamic_binds = true,
+	--navigation keybindings force override only while playlist is visible
+	--if "no" then you can display the playlist by any of the navigation keys
+	dynamic_binds = true,
 
-  -- to bind multiple keys separate them by a space
+	-- to bind multiple keys separate them by a space
 
-  -- main keys to show playlist and command menu
-  key_showplaylist = "SHIFT+ENTER",
-  key_openmenu = "",
+	-- main keys to show playlist and command menu
+	key_showplaylist = "SHIFT+ENTER",
+	key_openmenu = "",
 
-  -- display playlist while key is held down
-  key_peek_at_playlist = "",
+	-- display playlist while key is held down
+	key_peek_at_playlist = "",
 
-  -- dynamic keys
-  key_moveup = "UP",
-  key_movedown = "DOWN",
-  key_movepageup = "PGUP",
-  key_movepagedown = "PGDWN",
-  key_movebegin = "HOME",
-  key_moveend = "END",
-  key_selectfile = "RIGHT LEFT",
-  key_unselectfile = "",
-  key_playfile = "ENTER",
-  key_removefile = "BS",
-  key_closeplaylist = "ESC SHIFT+ENTER",
+	-- dynamic keys
+	key_moveup = "UP",
+	key_movedown = "DOWN",
+	key_movepageup = "PGUP",
+	key_movepagedown = "PGDWN",
+	key_movebegin = "HOME",
+	key_moveend = "END",
+	key_selectfile = "RIGHT LEFT",
+	key_unselectfile = "",
+	key_playfile = "ENTER",
+	key_removefile = "BS",
+	key_closeplaylist = "ESC SHIFT+ENTER",
 
-  -- extra functionality keys
-  key_sortplaylist = "",
-  key_shuffleplaylist = "",
-  key_reverseplaylist = "",
-  key_loadfiles = "",
-  key_saveplaylist = "",
-  key_selectplaylist = "",
+	-- extra functionality keys
+	key_sortplaylist = "",
+	key_shuffleplaylist = "",
+	key_reverseplaylist = "",
+	key_loadfiles = "",
+	key_saveplaylist = "",
+	key_selectplaylist = "",
 
-  --replaces matches on filenames based on extension, put as empty string to not replace anything
-  --replace rules are executed in provided order
-  --replace rule key is the pattern and value is the replace value
-  --uses :gsub('pattern', 'replace'), read more http://lua-users.org/wiki/StringLibraryTutorial
-  --'all' will match any extension or protocol if it has one
-  --uses json and parses it into a lua table to be able to support .conf file
+	--replaces matches on filenames based on extension, put as empty string to not replace anything
+	--replace rules are executed in provided order
+	--replace rule key is the pattern and value is the replace value
+	--uses :gsub('pattern', 'replace'), read more http://lua-users.org/wiki/StringLibraryTutorial
+	--'all' will match any extension or protocol if it has one
+	--uses json and parses it into a lua table to be able to support .conf file
 
-  filename_replace = [[
+	filename_replace = [[
     [
       {
         "protocol": { "all": true },
