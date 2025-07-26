@@ -6,6 +6,7 @@ items = [
 
 	# my beloved
 	"neovim-nightly",
+	"fastfetch",
 
 	# git things
 	"git",
@@ -15,6 +16,12 @@ items = [
 	"mpv",
 	"yt-dlp",
 	"socat",
+
+	# pdf
+	"pdfjs",
+
+	# office
+	"libreoffice-fresh",
 ]
 
 [managers.service]
