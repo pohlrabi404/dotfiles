@@ -7,3 +7,8 @@ desc = "Cd to .config"
 on = [ "g", "h" ]
 run = "cd ~/.dots"
 desc = "Cd to dotfiles"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "o" ]
+run = "cd ~/.config"
+desc = "Cd to .config"
