@@ -3,4 +3,8 @@ items = [
     # arduino
     "arduino-cli",
     "7zip",
+
+    # java
+    "jdk-openjdk",
+    "gradle",
 ]

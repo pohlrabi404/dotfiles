@@ -34,3 +34,10 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
 		key("n", "<C-x><C-h>", ":FzfLua helptags<CR>", {})
 	end,
 })
+
+vim.api.nvim_create_autocmd("LspAttach", {
+	group = keymap_group,
+	callback = function()
+		key("n", "<C-l><C-a>", ":FzfLua lsp_code_actions<CR>")
+	end,
+})
