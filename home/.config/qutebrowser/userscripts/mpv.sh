@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-# mpv-add-or-launch.sh  (updated)
-
 set -euo pipefail
 
 # ------------------------------------------------------------------ variables
