@@ -10,6 +10,7 @@ items = [
 	"yazi",
 	"fzf",
 	"fd",
+	"zoxide",
 	"inotify-tools",
 
 	# build system

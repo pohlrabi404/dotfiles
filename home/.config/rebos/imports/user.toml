@@ -6,6 +6,7 @@ items = [
 
 	# my beloved
 	"neovim-nightly",
+	"tmux",
 	"fastfetch",
 
 	# git things
@@ -22,10 +23,14 @@ items = [
 
 	# office
 	"libreoffice-fresh",
+
+	# obs
+	"obs-studio",
 ]
 
 [managers.service]
 items = [
 	"zsh-pohl",
 	"stow-service",
+	"tmux-plugin-manager",
 ]
