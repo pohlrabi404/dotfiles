@@ -31,7 +31,14 @@ return {
 		dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
 		lazy = false,
 	},
+	-- {
+	-- 	"mrjones2014/smart-splits.nvim",
+	-- },
 	{
-		"mrjones2014/smart-splits.nvim",
+		"ggandor/leap.nvim",
+		lazy = false,
+		config = function()
+			require("leap").set_default_mappings()
+		end,
 	},
 }
