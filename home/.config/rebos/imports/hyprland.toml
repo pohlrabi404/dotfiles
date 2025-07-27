@@ -20,4 +20,7 @@ items = [
 
 	## browser
 	"qutebrowser",
+
+	## screensharing
+	"xdg-desktop-portal-hyprland",
 ]
