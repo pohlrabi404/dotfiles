@@ -12,3 +12,13 @@ desc = "Cd to dotfiles"
 on = [ "g", "o" ]
 run = "cd ~/.config"
 desc = "Cd to .config"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "p" ]
+run = "cd ~/Projects/"
+desc = "Cd to Projects"
+
+[[mgr.prepend_keymap]]
+on = [ "g", "m" ]
+run = "cd ~/.config/mpv/playlists/"
+desc = "Cd to Musics"
