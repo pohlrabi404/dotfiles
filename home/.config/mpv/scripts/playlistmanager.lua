@@ -367,7 +367,7 @@ if settings.system == "windows" then
 	if ffiok then
 		ffi.cdef([[
       int MultiByteToWideChar(unsigned int CodePage, unsigned long dwFlags, const char *lpMultiByteStr, int cbMultiByte, wchar_t *lpWideCharStr, int cchWideChar);
-      int StrCmpLogicalW(const wchar_t * psz1, const wchar_t * psz2);        
+      int StrCmpLogicalW(const wchar_t * psz1, const wchar_t * psz2);
     ]])
 
 		local shlwapi = ffi.load("shlwapi.dll")
@@ -1220,7 +1220,7 @@ function playlist(force_dir)
 			if filename == file then
 				cur = true
 			elseif filenames[file] then
-			-- skip files already in playlist
+				-- skip files already in playlist
 			elseif cur == true or settings.loadfiles_always_append then
 				mp.commandv("loadfile", utils.join_path(dir, file), appendstr)
 				msg.info("Appended to playlist: " .. file)
@@ -1787,7 +1787,8 @@ end
 function resolve_ytdl_title(filename)
 	local args = {
 		settings.youtube_dl_executable,
-		-- "--yes-playlist",
+		"--no-playlist",
+		"--flat-playlist",
 		"-sJ",
 		"--no-config",
 		filename,
