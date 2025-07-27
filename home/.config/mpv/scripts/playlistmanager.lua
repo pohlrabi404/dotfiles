@@ -1694,9 +1694,11 @@ url_request_queue = {}
 function url_request_queue.push(item)
 	table.insert(url_request_queue, item)
 end
+
 function url_request_queue.pop()
 	return table.remove(url_request_queue, 1)
 end
+
 local url_titles_to_fetch = url_request_queue
 local ongoing_url_requests = {}
 
@@ -1730,9 +1732,11 @@ local_request_queue = {}
 function local_request_queue.push(item)
 	table.insert(local_request_queue, item)
 end
+
 function local_request_queue.pop()
 	return table.remove(local_request_queue, 1)
 end
+
 local local_titles_to_fetch = local_request_queue
 local ongoing_local_request = false
 
