@@ -8,8 +8,8 @@ vim.pack.add({
 vim.diagnostic.config({ virtual_lines = { current_line = true } })
 
 vim.cmd.colorscheme("gruber-darker")
+
 vim.g.mapleader = " "
 require("settings/lazy")
 require("settings/general")
 require("settings/keymaps")
-require("autocmds/auto-ssh")
