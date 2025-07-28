@@ -41,5 +41,8 @@ vcmd("VimEnter", {
 		k("", "<C-S-j>", split.swap_bottom)
 		k("", "<C-S-h>", split.swap_left)
 		k("", "<C-S-l>", split.swap_right)
+
+		local neogit = require("neogit")
+		k("n", "<localleader>g", neogit.open)
 	end
 })

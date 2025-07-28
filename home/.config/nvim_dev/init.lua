@@ -11,7 +11,11 @@ vim.pack.add({
 	-- jumping around
 	"https://github.com/ggandor/leap.nvim",
 	-- funny fidget
-	"https://github.com/j-hui/fidget.nvim"
+	"https://github.com/j-hui/fidget.nvim",
+	-- neogit
+	"https://github.com/NeogitOrg/neogit",
+	-- plenary (*)
+	"https://github.com/nvim-lua/plenary.nvim"
 })
 
 require("ui")
@@ -19,4 +23,3 @@ require("general")
 require("keybinds")
 require("navigations")
 require("lsp")
-require("ssh")
