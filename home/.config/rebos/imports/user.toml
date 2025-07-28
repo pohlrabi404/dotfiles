@@ -8,6 +8,8 @@ items = [
 	"neovim-nightly",
 	"tmux",
 	"fastfetch",
+	"htop",
+	"vial-appimage",
 
 	# git things
 	"git",
