@@ -1,44 +1,47 @@
-local key = vim.keymap.set
-key("", "<ESC>", "<ESC>:noh<CR>:Fidget clear<CR>", { silent = true })
-key("t", "<ESC>", "<C-\\><C-n>", {})
-key("n", "<C-x><C-o>", ":Oil<CR>", {})
-key("n", "<C-x><C-g>", ":Neogit<CR>", {})
+vim.g.mapleader = " "
+vim.g.maplocalleader = ";"
 
-local keymap_group = vim.api.nvim_create_augroup("KeymapEvent", { clear = true })
-vim.api.nvim_create_autocmd("BufNew", {
+local k = vim.keymap.set
+local keymap_group = vim.api.nvim_create_augroup("pohl.keymap", { clear = true })
+local vcmd = vim.api.nvim_create_autocmd
+
+k("", "<ESC>", "<ESC>:noh<CR>:Fidget clear<CR>", { silent = true })
+k("t", "<ESC>", "<C-\\><C-n>", {})
+k("n", "<localleader>o", ":Oil<CR>", {})
+k("n", "<localleader>g", ":Neogit<CR>", {})
+
+k("n", "<localleader>w", ":w<CR>")
+k("n", "<localleader>q", ":q<CR>")
+k("n", "<localleader>r", ":restart<CR>")
+k("n", "<localleader>s", ":update<CR>:source %<CR>")
+k({ "n", "v" }, "<localleader>y", "\"+y")
+k({ "n", "v" }, "<localleader>p", "\"+p")
+
+vcmd("BufNew", {
 	group = keymap_group,
 	callback = function()
 		local split = require("tmux")
-		key("", "<A-h>", split.move_left)
-		key("", "<A-l>", split.move_right)
-		key("", "<A-j>", split.move_bottom)
-		key("", "<A-k>", split.move_top)
+		k("", "<A-h>", split.move_left)
+		k("", "<A-l>", split.move_right)
+		k("", "<A-j>", split.move_bottom)
+		k("", "<A-k>", split.move_top)
 		--
-		key("", "<A-S-k>", split.resize_top)
-		key("", "<A-S-j>", split.resize_bottom)
-		key("", "<A-S-h>", split.resize_left)
-		key("", "<A-S-l>", split.resize_right)
+		k("", "<A-S-k>", split.resize_top)
+		k("", "<A-S-j>", split.resize_bottom)
+		k("", "<A-S-h>", split.resize_left)
+		k("", "<A-S-l>", split.resize_right)
 		--
-		key("", "<C-S-k>", split.swap_top)
-		key("", "<C-S-j>", split.swap_bottom)
-		key("", "<C-S-h>", split.swap_left)
-		key("", "<C-S-l>", split.swap_right)
+		k("", "<C-S-k>", split.swap_top)
+		k("", "<C-S-j>", split.swap_bottom)
+		k("", "<C-S-h>", split.swap_left)
+		k("", "<C-S-l>", split.swap_right)
 	end,
 })
 
-vim.api.nvim_create_autocmd("BufWinEnter", {
+vcmd("LspAttach", {
 	group = keymap_group,
 	callback = function()
-		key("", "<C-x><C-f>", ":FzfLua files<CR>", {})
-		key("", "<C-x><C-b>", ":FzfLua buffers<CR>", {})
-		key("", "<C-x><C-h>", ":FzfLua helptags<CR>", {})
-	end,
-})
-
-vim.api.nvim_create_autocmd("LspAttach", {
-	group = keymap_group,
-	callback = function()
-		key("", "<C-l><C-a>", ":FzfLua lsp_code_actions<CR>")
-		key("", "<C-l><C-r>", vim.lsp.buf.rename)
+		k("", "<C-l><C-a>", ":FzfLua lsp_code_actions<CR>")
+		k("", "<C-l><C-r>", vim.lsp.buf.rename)
 	end,
 })
