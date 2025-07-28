@@ -5,6 +5,8 @@ opt.relativenumber = true
 opt.number = true
 opt.fillchars = { eob = " " }
 
+opt.swapfile = false
+
 opt.expandtab = false
 opt.tabstop = 4
 opt.shiftwidth = 4
