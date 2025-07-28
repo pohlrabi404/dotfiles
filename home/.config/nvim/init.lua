@@ -11,6 +11,14 @@ vim.g.maplocalleader = ";"
 
 vim.api.nvim_set_hl(0, "Pmenu", { bg = "#181818" })
 
+-- lsp
+local servers = {
+	"lua",
+	"arduino",
+	"java",
+}
+vim.lsp.enable(servers)
+
 require("settings/lazy")
 require("settings/general")
 require("settings/keymaps")

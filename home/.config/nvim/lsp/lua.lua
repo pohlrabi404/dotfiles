@@ -1,4 +1,6 @@
-vim.lsp.config("lua", {
+local mason = vim.fn.stdpath("data") .. "/mason"
+local bin = mason .. "/bin"
+return {
 	capabilities = {
 		textDocument = {
 			semanticTokens = {
@@ -6,7 +8,7 @@ vim.lsp.config("lua", {
 			},
 		},
 	},
-	cmd = { "lua-language-server" },
+	cmd = { bin .. "/lua-language-server" },
 	filetypes = { "lua" },
 	root_markers = { ".luarc.json", ".git" },
 	settings = {
@@ -16,5 +18,4 @@ vim.lsp.config("lua", {
 			},
 		},
 	},
-})
-vim.lsp.enable("lua")
+}

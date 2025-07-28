@@ -7,15 +7,15 @@ local vcmd = vim.api.nvim_create_autocmd
 
 k("", "<ESC>", "<ESC>:noh<CR>:Fidget clear<CR>", { silent = true })
 k("t", "<ESC>", "<C-\\><C-n>", {})
+
 k("n", "<localleader>o", ":Oil<CR>", {})
 k("n", "<localleader>g", ":Neogit<CR>", {})
-
 k("n", "<localleader>w", ":w<CR>")
 k("n", "<localleader>q", ":q<CR>")
 k("n", "<localleader>r", ":restart<CR>")
 k("n", "<localleader>s", ":update<CR>:source %<CR>")
-k({ "n", "v" }, "<localleader>y", "\"+y")
-k({ "n", "v" }, "<localleader>p", "\"+p")
+k({ "n", "v" }, "<localleader>y", '"+y')
+k({ "n", "v" }, "<localleader>p", '"+p')
 
 vcmd("BufNew", {
 	group = keymap_group,
@@ -41,7 +41,22 @@ vcmd("BufNew", {
 vcmd("LspAttach", {
 	group = keymap_group,
 	callback = function()
-		k("", "<C-l><C-a>", ":FzfLua lsp_code_actions<CR>")
-		k("", "<C-l><C-r>", vim.lsp.buf.rename)
+		k("n", "<leader>ca", ":FzfLua lsp_code_actions<CR>")
+		k("n", "<leader>rn", vim.lsp.buf.rename)
+		k("n", "<leader>ld", ":FzfLua lsp_definitions<CR>")
+		k("n", "<leader>li", ":FzfLua lsp_implementations<CR>")
+		k("n", "<leader>dd", ":FzfLua lsp_document_diagnostics<CR>")
+		k("n", "<leader>wd", ":FzfLua lsp_workspace_diagnostics<CR>")
+		k("n", "<leader>lr", ":FzfLua lsp_references<CR>")
+	end,
+})
+
+vcmd("VimEnter", {
+	group = keymap_group,
+	callback = function()
+		k("n", "<leader>f", ":FzfLua files<CR>")
+		k("n", "<leader>b", ":FzfLua buffers<CR>")
+		k("n", "<leader>h", ":FzfLua helptags<CR>")
+		k("n", "<leader>g", ":FzfLua live_grep_glob<CR>")
 	end,
 })

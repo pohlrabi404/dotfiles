@@ -2,7 +2,7 @@ local mason = vim.fn.stdpath("data") .. "/mason"
 local jdtls = mason .. "/packages/jdtls/plugins"
 local root = vim.fs.root(0, { ".git", "mvnw", "gradlew" })
 
-vim.lsp.config("java", {
+return {
 	cmd = {
 
 		"java", -- or '/path/to/java21_or_newer/bin/java'
@@ -29,6 +29,5 @@ vim.lsp.config("java", {
 		root,
 	},
 	root_markers = { ".git", "mvnw", "gradlew" },
-})
-
-vim.lsp.enable("java")
+	filetypes = { "java" },
+}
