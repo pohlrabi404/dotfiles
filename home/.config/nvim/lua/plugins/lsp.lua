@@ -1,7 +1,7 @@
 return {
 	{
 		"mason-org/mason.nvim",
-		lazy = false,
+		event = "VeryLazy",
 		opts = {},
 	},
 	{
@@ -11,8 +11,6 @@ return {
 		dependencies = { "rafamadriz/friendly-snippets" },
 		build = "cargo build --release",
 
-		---@module 'blink.cmp'
-		---@type blink.cmp.Config
 		opts = {
 			keymap = { preset = "default" },
 			appearance = {
@@ -24,15 +22,6 @@ return {
 				accept = {
 					create_undo_point = true,
 					resolve_timeout_ms = 100,
-					auto_brackets = {
-						enabled = true,
-						default_brackets = { "(", ")", "[", "]", "{", "}" },
-						-- default_brackets = { "(", ")" },
-						semantic_token_resolution = {
-							enabled = true,
-							timeout_ms = 400,
-						},
-					},
 				},
 			},
 			sources = {

@@ -4,12 +4,13 @@ vim.pack.add({
 	-- gruber-darker
 	"https://github.com/blazkowolf/gruber-darker.nvim",
 })
-
 vim.diagnostic.config({ virtual_lines = { current_line = true } })
-
 vim.cmd.colorscheme("gruber-darker")
-
 vim.g.mapleader = " "
+vim.g.maplocalleader = ";"
+
+vim.api.nvim_set_hl(0, "Pmenu", { bg = "#181818" })
+
 require("settings/lazy")
 require("settings/general")
 require("settings/keymaps")
