@@ -1,8 +1,9 @@
-# Created by newuser for 5.9
 alias ls='ls --color=auto'
 alias lls='ls -la --color=auto'
 alias grep='grep --color=auto'
 alias bm='bashmount'
+alias nv="nvim"
+alias nvd="NVIM_APPNAME=nvim_dev nvim"
 
 function rein() {
 	rebos gen commit "$1"
