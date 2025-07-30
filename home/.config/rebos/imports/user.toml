@@ -26,8 +26,10 @@ items = [
 	# office
 	"libreoffice-fresh",
 
-	# obs
+	# screen recording, etc
 	"obs-studio",
+	"hyprshot",
+
 ]
 
 [managers.service]
