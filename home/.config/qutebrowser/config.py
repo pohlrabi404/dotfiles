@@ -17,3 +17,5 @@ config.bind("<Ctrl-b>", "completion-item-focus prev-page", mode="command")
 config.bind("<Esc>", "clear-keychain ;; search ;; clear-messages ;; download-clear")
 
 config.bind(";f", "hint links userscript mpv.sh")
+
+c.qt.args = ["disable-features=PermissionElement"]
