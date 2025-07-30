@@ -7,4 +7,12 @@ items = [
     # java
     "jdk-openjdk",
     "gradle",
+
+	# hyprland
+	"pixman",
+
+	# utils
+	"hyprutils-git",
+	"hyprwayland-scanner",
+	"cpio",
 ]
