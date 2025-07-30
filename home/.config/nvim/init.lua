@@ -16,6 +16,7 @@ local servers = {
 	"lua",
 	"arduino",
 	"java",
+	"cpp",
 }
 vim.lsp.enable(servers)
 
