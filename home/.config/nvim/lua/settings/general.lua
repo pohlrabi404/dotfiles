@@ -5,6 +5,7 @@ opt.relativenumber = true
 opt.number = true
 opt.fillchars = { eob = " " }
 opt.winborder = "single"
+opt.signcolumn = "yes"
 
 opt.swapfile = false
 
