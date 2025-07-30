@@ -2,6 +2,9 @@ return {
 	"aserowy/tmux.nvim",
 	lazy = false,
 	opts = {
+		copy_sync = {
+			redirect_to_clipboard = true
+		},
 		navigation = {
 			enable_default_keybindings = false,
 		},
