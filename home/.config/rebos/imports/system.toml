@@ -34,4 +34,7 @@ items = [
 	# usb
 	"udisks2",
 	"bashmount",
+
+	# clipboard
+	"wl-clipboard",
 ]
