@@ -41,13 +41,15 @@ vcmd("BufNew", {
 vcmd("LspAttach", {
 	group = keymap_group,
 	callback = function()
-		k("n", "<leader>ca", ":FzfLua lsp_code_actions<CR>")
-		k("n", "<leader>rn", vim.lsp.buf.rename)
-		k("n", "<leader>ld", ":FzfLua lsp_definitions<CR>")
-		k("n", "<leader>li", ":FzfLua lsp_implementations<CR>")
-		k("n", "<leader>dd", ":FzfLua lsp_document_diagnostics<CR>")
-		k("n", "<leader>wd", ":FzfLua lsp_workspace_diagnostics<CR>")
-		k("n", "<leader>lr", ":FzfLua lsp_references<CR>")
+		k("n", "gra", ":FzfLua lsp_code_actions<CR>")
+		k("n", "grn", vim.lsp.buf.rename)
+		k("n", "grt", ":FzfLua lsp_typedefs<CR>")
+		k("n", "gri", ":FzfLua lsp_implementations<CR>")
+		k("n", "grd", ":FzfLua lsp_document_diagnostics<CR>")
+		k("n", "grw", ":FzfLua lsp_workspace_diagnostics<CR>")
+		k("n", "grr", ":FzfLua lsp_references<CR>")
+		k("n", "gO", ":FzfLua lsp_document_symbols<CR>")
+		k("n", "grf", vim.diagnostic.open_float)
 	end,
 })
 

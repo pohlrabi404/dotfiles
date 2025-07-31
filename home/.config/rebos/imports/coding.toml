@@ -8,11 +8,20 @@ items = [
     "jdk-openjdk",
     "gradle",
 
+	# cpp
+	"base-devel",
+	"cmake",
+	"meson",
+	"ninja",
+	"clang",
+	"gcc",
+	"gdb",
+
 	# hyprland
 	"pixman",
 
 	# utils
-	"hyprutils-git",
 	"hyprwayland-scanner",
 	"cpio",
+
 ]

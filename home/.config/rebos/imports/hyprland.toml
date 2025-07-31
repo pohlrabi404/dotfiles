@@ -1,6 +1,6 @@
 [managers.system]
 items = [
-	"hyprland",
+	"hyprland-git",
 	"uwsm",
 	"libnewt",
 	"kitty",
@@ -22,5 +22,5 @@ items = [
 	"qutebrowser",
 
 	## screensharing
-	"xdg-desktop-portal-hyprland",
+	# "xdg-desktop-portal-hyprland",
 ]

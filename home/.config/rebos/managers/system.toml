@@ -2,7 +2,7 @@
 #    Manager Configuration    #
 # --------------------------- #
 
-add = "paru -S --noconfirm #:?" 
+add = "paru -S #:?" 
 remove = "paru -Rns #:?"
 sync = "paru -Syu #:?"
 upgrade = "paru -U #:?"

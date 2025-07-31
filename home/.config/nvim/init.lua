@@ -4,7 +4,10 @@ vim.pack.add({
 	-- gruber-darker
 	"https://github.com/blazkowolf/gruber-darker.nvim",
 })
-vim.diagnostic.config({ virtual_lines = { current_line = true } })
+vim.diagnostic.config({
+	virtual_lines = { current_line = true },
+	virtual_text = false,
+})
 vim.cmd.colorscheme("gruber-darker")
 vim.g.mapleader = " "
 vim.g.maplocalleader = ";"
