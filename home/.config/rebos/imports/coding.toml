@@ -21,7 +21,5 @@ items = [
 	"pixman",
 
 	# utils
-	"hyprwayland-scanner",
 	"cpio",
-
 ]

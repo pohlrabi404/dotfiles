@@ -30,6 +30,8 @@ items = [
 	"obs-studio",
 	"hyprshot",
 
+	# google chrome...
+	"google-chrome",
 ]
 
 [managers.service]

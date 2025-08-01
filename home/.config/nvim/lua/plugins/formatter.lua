@@ -1,16 +1,17 @@
 return {
 	{
 		"stevearc/conform.nvim",
-		ft = { "lua", "java", "arduino" },
+		ft = { "lua", "java", "arduino", "cpp" },
 		opts = {
 			formatters_by_ft = {
 				lua = { "stylua" },
-				java = { lsp_format = "prefer" },
+				java = {},
 				arduino = {},
+				cpp = { "clang-format" },
 			},
 			format_on_save = {
 				timeout_ms = 500,
-				lsp_format = "prefer",
+				lsp_format = "fallback",
 			},
 		},
 	},

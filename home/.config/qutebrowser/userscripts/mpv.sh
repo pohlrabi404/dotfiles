@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ------------------------------------------------------------------ variables
-SOCKET="${XDG_RUNTIME_DIR:-/tmp}/mpv-socket"
+SOCKET="/tmp/mpv-socket"
 
 # ------------------------------------------------------------------ functions
 start_mpv() {
