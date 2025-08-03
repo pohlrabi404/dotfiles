@@ -77,6 +77,7 @@ return {
 		".clangd",
 		".clang-tidy",
 		".clang-format",
+		"meson.build",
 		"compile_commands.json",
 		"compile_flags.txt",
 		"configure.ac", -- AutoTools

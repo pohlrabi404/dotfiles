@@ -3,6 +3,7 @@ alias lls='ls -la --color=auto'
 alias grep='grep --color=auto'
 alias bm='bashmount'
 alias nv="nvim"
+alias hd="Hyprland -c ~/.config/hypr/hyprlandd.conf"
 
 function rein() {
 	rebos gen commit "$1"
