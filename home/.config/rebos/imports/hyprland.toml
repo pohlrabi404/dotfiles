@@ -21,6 +21,9 @@ items = [
 	## browser
 	"qutebrowser",
 
+	## background
+	"swww",
+
 	## screensharing
 	# "xdg-desktop-portal-hyprland",
 ]

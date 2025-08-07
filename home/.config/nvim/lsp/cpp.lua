@@ -71,6 +71,7 @@ return {
 		"--clang-tidy",
 		"--cross-file-rename",
 		"--completion-style=bundled",
+		"--function-arg-placeholders=0",
 	},
 	filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
 	root_markers = {

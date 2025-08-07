@@ -32,9 +32,12 @@
 --- Use the `:LspTypescriptSourceAction` command to see "whole file" ("source") code-actions such as:
 --- - organize imports
 --- - remove unused code
+local mason = vim.fn.stdpath("data") .. "/mason"
+local bin = mason .. "/bin"
+
 return {
 	init_options = { hostInfo = "neovim" },
-	cmd = { "typescript-language-server", "--stdio" },
+	cmd = { bin .. "typescript-language-server", "--stdio" },
 	filetypes = {
 		"javascript",
 		"javascriptreact",

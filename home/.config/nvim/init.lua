@@ -20,7 +20,11 @@ local servers = {
 	"arduino",
 	"java",
 	"cpp",
+	"html",
+	"javascript",
+	"css",
 }
+
 vim.lsp.enable(servers)
 
 require("settings/lazy")

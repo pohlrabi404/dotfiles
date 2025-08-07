@@ -3,6 +3,7 @@ items = [
     # arduino
     "arduino-cli",
     "7zip",
+	"uucp",
 
     # java
     "jdk-openjdk",
@@ -22,4 +23,14 @@ items = [
 
 	# utils
 	"cpio",
+
+	# js things
+	"npm",
+	"mosquitto",
+
+	# docker things
+	"docker",
+
+	# python things
+	"uv",
 ]
