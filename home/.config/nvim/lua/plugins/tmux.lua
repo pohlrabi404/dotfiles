@@ -2,9 +2,13 @@ return {
 	{
 		"aserowy/tmux.nvim",
 		lazy = false,
+		config = function()
+			require("tmux").setup()
+		end,
 		opts = {
 			copy_sync = {
-				redirect_to_clipboard = true
+				enable = true,
+				redirect_to_clipboard = false,
 			},
 			navigation = {
 				enable_default_keybindings = false,
@@ -30,5 +34,5 @@ return {
 			suppressed_dirs = { "~/", "~/Downloads", "/" },
 			-- log_level = 'debug',
 		},
-	}
+	},
 }

@@ -1,42 +1,38 @@
 [managers.system]
 items = [
-	# shell
-	"zsh",
-	"starship",
+  # shell
+  "zsh",
+  "starship",
 
-	# my beloved
-	"neovim-nightly",
-	"tmux",
-	"fastfetch",
-	"htop",
-	"vial-appimage",
+  # my beloved
+  "neovim-nightly",
+  "tmux",
+  "fastfetch",
+  "htop",
+  "vial-appimage",
 
-	# git things
-	"git",
-	"openssh",
+  # git things
+  "git",
+  "openssh",
 
-	# entertainment
-	"mpv",
-	"yt-dlp",
-	"socat",
+  # entertainment
+  "mpv",
+  "yt-dlp",
+  "socat",
 
-	# pdf
-	"pdfjs",
+  # pdf
+  "pdfjs",
 
-	# office
-	"libreoffice-fresh",
+  # office
+  "libreoffice-fresh",
 
-	# screen recording, etc
-	"obs-studio",
-	"hyprshot",
+  # screen recording, etc
+  "obs-studio",
+  "hyprshot",
 
-	# google chrome...
-	"google-chrome",
+  # google chrome...
+  "google-chrome",
 ]
 
 [managers.service]
-items = [
-	"zsh-pohl",
-	"stow-service",
-	"tmux-plugin-manager",
-]
+items = ["zsh-pohl", "stow-service", "tmux-plugin-manager"]

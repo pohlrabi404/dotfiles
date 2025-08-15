@@ -1,41 +1,41 @@
 [managers.system]
 items = [
-	# utility
-	"tldr",
-	"less",
-	"stow",
-	"cachyos-settings",
+  # utility
+  "tldr",
+  "less",
+  "stow",
+  "cachyos-settings",
 
-	# file navigation
-	"yazi",
-	"fzf",
-	"fd",
-	"ripgrep",
-	"zoxide",
-	"inotify-tools",
+  # file navigation
+  "yazi",
+  "fzf",
+  "fd",
+  "ripgrep",
+  "zoxide",
+  "inotify-tools",
 
-	# build system
-	"base-devel",
+  # build system
+  "base-devel",
 
-	# watch keys code
-	"wev",
+  # watch keys code
+  "wev",
 
-	# sounds
-	"sof-firmware",
-	"pipewire",
-	"pipewire-audio",
-	"pipewire-alsa",
-	"pipewire-pulse",
-	"pipemixer-git",
+  # sounds
+  "sof-firmware",
+  "pipewire",
+  "pipewire-audio",
+  "pipewire-alsa",
+  "pipewire-pulse",
+  "pipemixer-git",
 
-	# brightness
-	"brightnessctl",
+  # brightness
+  "brightnessctl",
 
-	# usb
-	"udisks2",
-	"bashmount",
+  # usb
+  "udisks2",
+  "bashmount",
 
-	# clipboard
-	"wl-clipboard",
+  # clipboard
+  "wl-clipboard",
 
 ]

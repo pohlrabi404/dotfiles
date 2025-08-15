@@ -1,6 +1,3 @@
-vim.g.mapleader = " "
-vim.g.maplocalleader = ";"
-
 local k = vim.keymap.set
 local keymap_group = vim.api.nvim_create_augroup("pohl.keymap", { clear = true })
 local vcmd = vim.api.nvim_create_autocmd
@@ -8,7 +5,12 @@ local vcmd = vim.api.nvim_create_autocmd
 k("", "<ESC>", "<ESC>:noh<CR>:Fidget clear<CR>", { silent = true })
 k("t", "<ESC>", "<C-\\><C-n>", {})
 
-k("n", "<localleader>o", ":Oil<CR>", {})
+-- no comment new line
+k("i", "<A-o>", "<Esc>o<C-o>cc")
+
+k("n", "<localleader>o", function()
+	require("oil").open(nil, { preview = { split = "belowright" } })
+end, {})
 k("n", "<localleader>g", ":Neogit<CR>", {})
 k("n", "<localleader>w", ":w<CR>")
 k("n", "<localleader>q", ":q<CR>")
@@ -56,9 +58,15 @@ vcmd("LspAttach", {
 vcmd("VimEnter", {
 	group = keymap_group,
 	callback = function()
-		k("n", "<leader>f", ":FzfLua files<CR>")
+		k("n", "<leader>f", function()
+			local current_dir = require("oil").get_current_dir()
+			require("fzf-lua").files({ cwd = current_dir })
+		end)
 		k("n", "<leader>b", ":FzfLua buffers<CR>")
 		k("n", "<leader>h", ":FzfLua helptags<CR>")
-		k("n", "<leader>g", ":FzfLua live_grep_glob<CR>")
+		k("n", "<leader>g", function()
+			local current_dir = require("oil").get_current_dir()
+			require("fzf-lua").live_grep_glob({ cwd = current_dir })
+		end)
 	end,
 })

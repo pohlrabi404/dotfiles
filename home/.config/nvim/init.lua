@@ -23,6 +23,8 @@ local servers = {
 	"html",
 	"javascript",
 	"css",
+	"typst",
+	"rust",
 }
 
 vim.lsp.enable(servers)

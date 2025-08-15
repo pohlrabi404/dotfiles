@@ -1,29 +1,29 @@
 [managers.system]
 items = [
-	"hyprland-git",
-	"uwsm",
-	"libnewt",
-	"kitty",
+  "hyprland-git",
+  "uwsm",
+  "libnewt",
+  "kitty",
 
-	## switcher
-	"tofi",
+  ## switcher
+  "tofi",
 
-	## font
-	"ttf-iosevka-nerd",
-	"noto-fonts-cjk",
-	"noto-fonts-emoji",
-	"ttf-jigmo",
+  ## font
+  "ttf-iosevka-nerd",
+  "noto-fonts-cjk",
+  "noto-fonts-emoji",
+  "ttf-jigmo",
 
-	## japanese input
-	"fcitx5-im",
-	"fcitx5-mozc",
+  ## japanese input
+  "fcitx5-im",
+  "fcitx5-mozc",
 
-	## browser
-	"qutebrowser",
+  ## browser
+  "qutebrowser",
 
-	## background
-	"swww",
+  ## background
+  "swww",
 
-	## screensharing
-	# "xdg-desktop-portal-hyprland",
+  ## screensharing
+  # "xdg-desktop-portal-hyprland",
 ]

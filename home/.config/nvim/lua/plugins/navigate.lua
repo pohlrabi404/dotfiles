@@ -16,6 +16,25 @@ return {
 			view_options = {
 				show_hidden = true,
 			},
+
+			keymaps = {
+				["<leader>c"] = function()
+					local config_dir = vim.fn.expand("~/.dots/home/.config/")
+					require("oil").open(config_dir)
+				end,
+				["<leader>d"] = function()
+					local config_dir = vim.fn.expand("~/Downloads/")
+					require("oil").open(config_dir)
+				end,
+				["<leader>m"] = function()
+					local config_dir = vim.fn.expand("~/.config/mpv/playlists/")
+					require("oil").open(config_dir)
+				end,
+				["<leader>p"] = function()
+					local config_dir = vim.fn.expand("~/Projects/")
+					require("oil").open(config_dir)
+				end,
+			},
 		},
 		dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
 		lazy = false,

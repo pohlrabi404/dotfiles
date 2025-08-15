@@ -1,36 +1,39 @@
 [managers.system]
 items = [
-    # arduino
-    "arduino-cli",
-    "7zip",
-	"uucp",
+  # arduino
+  "arduino-cli",
+  "7zip",
+  "uucp",
 
-    # java
-    "jdk-openjdk",
-    "gradle",
+  # java
+  "jdk-openjdk",
+  "gradle",
 
-	# cpp
-	"base-devel",
-	"cmake",
-	"meson",
-	"ninja",
-	"clang",
-	"gcc",
-	"gdb",
+  # cpp
+  "base-devel",
+  "cmake",
+  "meson",
+  "ninja",
+  "clang",
+  "gcc",
+  "gdb",
 
-	# hyprland
-	"pixman",
+  # hyprland
+  "pixman",
 
-	# utils
-	"cpio",
+  # utils
+  "cpio",
 
-	# js things
-	"npm",
-	"mosquitto",
+  # js things
+  "npm",
+  "mosquitto",
 
-	# docker things
-	"docker",
+  # docker things
+  # "docker",
 
-	# python things
-	"uv",
+  # python things
+  "uv",
+
+  # typst
+  "typst",
 ]
