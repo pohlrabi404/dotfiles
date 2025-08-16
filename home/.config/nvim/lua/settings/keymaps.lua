@@ -19,6 +19,9 @@ k("n", "<localleader>s", ":update<CR>:source %<CR>")
 k({ "n", "v" }, "<localleader>y", '"+y')
 k({ "n", "v" }, "<localleader>p", '"+p')
 
+-- undotree
+k({ "n" }, "<localleader>t", ":UndotreeToggle<CR>:UndotreeFocus<CR>")
+
 vcmd("BufNew", {
 	group = keymap_group,
 	callback = function()

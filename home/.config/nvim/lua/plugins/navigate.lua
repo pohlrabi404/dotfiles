@@ -46,4 +46,8 @@ return {
 			require("leap").set_default_mappings()
 		end,
 	},
+	{
+		"mbbill/undotree",
+		lazy = false,
+	},
 }
