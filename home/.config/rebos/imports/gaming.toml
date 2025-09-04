@@ -1,0 +1,2 @@
+[managers.system]
+items = ["cachyos-gaming-meta", "cachyos-gaming-applications", "wine-mono"]

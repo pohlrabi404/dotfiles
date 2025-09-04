@@ -1,7 +1,7 @@
 return {
 	{
 		"stevearc/conform.nvim",
-		ft = { "lua", "java", "arduino", "cpp", "javascript", "html", "css", "toml", "typst" },
+		ft = { "lua", "java", "arduino", "cpp", "javascript", "html", "css", "toml", "typst", "markdown" },
 		opts = {
 			formatters_by_ft = {
 				lua = { "stylua" },
@@ -13,6 +13,7 @@ return {
 				css = { "prettierd" },
 				toml = { "taplo" },
 				typst = { "typstyle" },
+				markdown = { "prettierd" },
 			},
 			format_on_save = {
 				timeout_ms = 500,

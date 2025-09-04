@@ -38,4 +38,7 @@ items = [
   # clipboard
   "wl-clipboard",
 
+  # man
+  "man",
+
 ]

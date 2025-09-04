@@ -9,4 +9,10 @@ return {
 			},
 		},
 	},
+	-- {
+	-- 	dir = "/home/pohl/Projects/Lua/typst-preview.nvim",
+	-- 	lazy = false,
+	-- },
+
+	{ "echasnovski/mini.doc", version = false, opts = {}, lazy = false },
 }
